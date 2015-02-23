@@ -2,7 +2,7 @@
 AeroFlex is a MATLAB toolbox for studying the flight dynamics of highly flexible airplanes.
 
 Most part of development was done during [my master thesis](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=61853),
-at [ITA](www.ita.br). Several contributions come from the work of Marcelo S. de Sousa during [his PhD](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=64358) at ITA.
+at [ITA](http://www.ita.br). Several contributions come from the work of Marcelo S. de Sousa during [his PhD](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=64358) at ITA.
 
 This tool uses the mathematical development from the PhD theses of [Eric Brown (2003)](http://dspace.mit.edu/handle/1721.1/8001) 
 and [Christopher Shearer (2006)](http://adsabs.harvard.edu/abs/2006PhDT.......242S).
@@ -41,7 +41,7 @@ to perform simulations. You can have a better idea of how AeroFlex work by readi
 Here you can find some references that used AeroFlex for studying the flight dynamics
 and control of highly flexible airplanes.
 
-* Cardoso-Ribeiro, F.L., Paglione, P., da Silva, R.G.A., de Sousa, M.S.  [AeroFlex: A toolbox for studying the flight dynamics of highly flexible airplanes]. CONEM 2012.
+* Cardoso-Ribeiro, F.L., Paglione, P., da Silva, R.G.A., de Sousa, M.S.  [AeroFlex: A toolbox for studying the flight dynamics of highly flexible airplanes](http://flavioluiz.github.io/papers/AeroFlexCONEM.pdf). CONEM 2012.
 
 * Cardoso-Ribeiro, F.L., Paglione, P., da Silva, R.G.A. [Stability analysis of a highly flexible airplane](http://flavioluiz.github.io/papers/StabilityCONEM.pdf). CONEM 2012.
 
