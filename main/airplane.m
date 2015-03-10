@@ -70,6 +70,9 @@ classdef airplane < handle
             ap.N = N;
             ap.B = B;
             
+            if isempty(fus)
+                fus = rigidfus(0, [0 0 0], zeros(3,3));
+            end
             ap.fus = fus;
         end
         function updateStrJac(ap)
@@ -242,6 +245,9 @@ classdef airplane < handle
                 beta(3) = -0*sin(theta);
                 beta(2) = 0*cos(theta);
                 strainEQ = fsolve(@equilibraestrutura, strain,options,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, deltaflap);
+                if softPARAMS.plota3d
+                            figure(100);plotairplane3d(ap);
+                end
             end
             theta
             deltaflap
