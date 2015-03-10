@@ -1,11 +1,18 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%      AeroFlex - Example 1  - Structural Dynamics               %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      AeroFlex - Example 1  - Structural Dynamics                    %
+% - computes eigenvalues/eigenvectors of linear structural dynamics   %
+% - finds equilibrium (only gravity)                                  %
+% - simulation (beam starts undeformed, goes to equilibrium)          %
+%                                                                     %
+% Several things not working yet:                                     %
+%     - graphical results (can't plot structure, since plot tool      %
+%       uses aerodynamic object to define wing chord                  %
+%     - should validate with exact beam results (at least eigenvalues)%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 function example1
     clc
-    clear all
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % AeroFlex Main Folder:                              %
@@ -18,7 +25,7 @@ function example1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     global softPARAMS;
     softPARAMS.isIS = 1; %is it International System?
-    softPARAMS.isPINNED = 1; % PINNED RB DOF
+    softPARAMS.isPINNED = 1; % PINNED RIGID BODY DOF
     softPARAMS.vecFREEDEG = [0 0 0 0 0 0]; % type 0 to remove a body state
                                            % degree of freedom [u v w p q r]
     softPARAMS.isGRAV = 1; % include gravity?
@@ -34,36 +41,30 @@ function example1
                                     % 0 - Never;
                                     % 1 - Only in equilib calculation;
                                     % 2 - Always
-    softPARAMS.plota3d = 0; % 3d graphics plot while equilibrium is calculated
+    softPARAMS.plota3d = 1; % 3d graphics plot while equilibrium is calculated
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
 
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 1; %number of elements
+    numele = 3; %number of elements
     damping = 0.04; %damping coefficient (eg.: 0.0001)
-    rigmult = 1000; %multiplier for the rigidity matrix (eg.: 1)
+    rigmult = 1; %multiplier for the rigidity matrix (eg.: 1)
     ap = load_structure(numele,damping,rigmult); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    pause;
-    % the following variables are script specific FLAGs (they are specific for
-    % this file and won't affect anything else in AeroFlex)
-    makemovie = 0;       % record a movie from simulation results
-    
-    
     
     %%%%%%%%%%%% FINDS TRIM CONDITION %%%%%%%%%%%%%%%%%%%%
-    %%%% FLIGHT CONDITIONS
+    %%%% FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
     altitude = 20000; % meters
     V = 15;           % m/s
-    Vwind = 0;        % m/s (Take care! By now Vwind is aligned with y direction/body frame!)
+    Vwind = 0;        % m/s 
     tic;
     tracao = 0;
     deltaflap = 0;
-    [vecequilibrio Xeq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
+    [vecequilibrio, Xeq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
     toc;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
@@ -108,7 +109,7 @@ function example1
     T=[0.00 0.49 0.50 0.74 0.75 0.99 1.00 100];
     elev=[0 0 1 1 -1 -1 0 0];
     doublet = @(t) (deltaflap+interp1(T,elev,t));
-    strain0 = Xeq;
+    strain0 = Xeq*0;
     betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
     keq = [theta;0;0;altitude];
     beta0 = [deltau; V*cos(theta+deltaalfa)+deltav; -V*sin(theta+deltaalfa)+deltaw;0;0;0];
@@ -134,7 +135,6 @@ function example1
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
         desloctip(i) = ap.membros{1}(numele).node3.h(3);
     end
-    save('results\flyingwingdoubletinput.mat','tNL','xNL','betaNL','kineticNL','ts','desloctip','betaeq','keq');
     figure('name','Wing tip displacement');
     plot(ts,desloctip); xlabel('Time (s)'); ylabel('Tip displacement (m)');
     
@@ -146,21 +146,17 @@ function example1
         end
         airplanemovie(ap, ts, Xs,dt);
     end
-    simulaRIGID = input('\nDigite 1 para apresentar resultados de simulação da aeronave rigida:');
 
-    if simulaRIGID
-        dinamicarigida(V,altitude,longfig, tSIM, deltav, deltaw, deltaalfa,@(t)0, @(t)interp1(T,elev,t));
-    end
-        
 end
 
 function ap = load_structure(numele, amort, rigidez)
     % member initialization
     membro = create_flexible_member(numele,amort,rigidez);
     
-    fus = []; 
+    
     membro(1).seth0([0 -0.0 0 1 0 0 0 1 0 0 0 1]');
     update(membro); %seta deslocamentos        
+    fus = []; 
     motor1 = [];
     ap = airplane({membro}, fus, [motor1]);
 end
@@ -196,3 +192,4 @@ function membro = create_flexible_member(numelem,amort, rigidez, rot)
         membro(i).setstrain([0 0 0 0],[0 0 0 0]);
     end
 end
+ 
