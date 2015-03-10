@@ -36,7 +36,7 @@ function example1
                                     %1-Quasi-steady;
                                     %2-Quasi-steady with added mass;
                                     %3-Unsteady(Peters);
-    softPARAMS.updateStrJac = 1; % Structural Jacobians updates:
+    softPARAMS.updateStrJac = 2; % Structural Jacobians updates:
                                     % 0 - Never;
                                     % 1 - Only in equilib calculation;
                                     % 2 - Always
@@ -154,7 +154,7 @@ function ap = load_structure(numele, amort, rigidez)
     membro = create_flexible_member(numele,amort,rigidez);
     
     
-    membro(1).seth0([0 -0.0 0 1 0 0 0 1 0 0 0 1]');
+    membro(1).seth0([0 -0.0 0 1 0 0 0 1 0 0 0 1]'); %set member origin node
     update(membro); %seta deslocamentos        
     fus = []; 
     motor1 = [];
@@ -168,7 +168,7 @@ function membro = create_flexible_member(numelem,amort, rigidez, rot)
     K44 = 4e6; %chord bend: EI
     KG = rigidez*diag([K11 K22 K33 K44]);
         
-    CG = diag([K11 amort*K22 amort*K33 amort*K44]);    % tese: 0.00005*KG;
+    CG = diag([amort*K11 amort*K22 amort*K33 amort*K44]);    % tese: 0.00005*KG;
     ds = 16/numelem;
     
     I22 = 0.0;
@@ -181,7 +181,7 @@ function membro = create_flexible_member(numelem,amort, rigidez, rot)
     pos_cg = [0 0.3 0]; % position of section gravity center
                         % relative to elastic axis
     geometry.a = 0.5;
-    geometry.b = 1;
+    geometry.b = 0.5;
     rigidunit.m = 0; rigidunit.cg = [0,0,0]; rigidunit.I = zeros(3,3);
     for i = 1:numelem
         noh((i-1)*3+1) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams, rigidunit,((i-1)*ds)/20 ,geometry);
