@@ -4,9 +4,8 @@
 % - finds equilibrium (only gravity)                                  %
 % - simulation (beam starts undeformed, goes to equilibrium)          %
 %                                                                     %
-% Several things not working yet:                                     %
-%     - graphical results (can't plot structure, since plot tool      %
-%       uses aerodynamic object to define wing chord                  %
+% Several things not working properly yet:                            %
+%     - graphical results  (problems with video rate)                 %
 %     - should validate with exact beam results (at least eigenvalues)%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -107,7 +106,7 @@ function example1
     
     %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%
     T=[0.00 0.49 0.50 0.74 0.75 0.99 1.00 100];
-    elev=[0 0 1 1 -1 -1 0 0];
+    elev=[0 0 1 1 -1 -1 0 0]*0;
     doublet = @(t) (deltaflap+interp1(T,elev,t));
     strain0 = Xeq*0;
     betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
@@ -129,8 +128,9 @@ function example1
     subplot(3,2,5); plot(tNL,betaNL(:,4),'r'); xlabel('t'); ylabel('q');hold all;%q
     subplot(3,2,6); plot(tNL,kineticNL(:,4),'r'); xlabel('t'); ylabel('H');hold all; %H
     
-    dt = 0.05;
+    dt = 0.1;
     [ts Xs] = changedatarate(tNL,xNL,dt);
+    ts = tNL; Xs = xNL;
     for i = 1:size(ts,1)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
         desloctip(i) = ap.membros{1}(numele).node3.h(3);
@@ -139,12 +139,12 @@ function example1
     plot(ts,desloctip); xlabel('Time (s)'); ylabel('Tip displacement (m)');
     
     if makemovie
-        dt = 0.1;
-        [ts Xs] = changedatarate(tNL,xNL,dt);
+        dt = 1e-4;
+        %[ts Xs] = changedatarate(tNL,xNL,dt);
         for i = 1:size(ts,1)
-            Xs(i,:) =  Xs(i,:) + Xeq(1:ap.NUMele*4);
+            Xs(i,:) =  Xs(i,:) + Xeq(1:ap.NUMele*4)*0;
         end
-        airplanemovie(ap, ts, Xs,dt);
+        airplanemovie(ap, ts, Xs,dt); axis equal;
     end
 
 end
@@ -180,11 +180,13 @@ function membro = create_flexible_member(numelem,amort, rigidez, rot)
 
     pos_cg = [0 0.3 0]; % position of section gravity center
                         % relative to elastic axis
+    geometry.a = 0.5;
+    geometry.b = 1;
     rigidunit.m = 0; rigidunit.cg = [0,0,0]; rigidunit.I = zeros(3,3);
     for i = 1:numelem
-        noh((i-1)*3+1) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams, rigidunit,((i-1)*ds)/20);
-        noh((i-1)*3+2) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams,rigidunit,(ds/2+(i-1)*ds)/20);
-        noh((i-1)*3+3) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams,rigidunit,i*ds/20);
+        noh((i-1)*3+1) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams, rigidunit,((i-1)*ds)/20 ,geometry);
+        noh((i-1)*3+2) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams,rigidunit,(ds/2+(i-1)*ds)/20, geometry);
+        noh((i-1)*3+3) = node(mcs, pos_cg, diag([I11 I22 I33]),aeroparams,rigidunit,i*ds/20, geometry);
         rot.dihedral = 0;
         rot.sweep = 0;
         rot.twist = 0;

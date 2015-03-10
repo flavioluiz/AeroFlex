@@ -13,9 +13,15 @@ classdef node < handle
         h; %vetor com 9 elementos com posicao e orientacao do noh
         aero;
         s;
+        geometry; % structure with two elements: b (semi-chord) and a
     end
     methods
-        function nd = node(mcs, mcg, Inertia,petersinp, rigid, s)  %inicializa o noh
+        function nd = node(mcs, mcg, Inertia,petersinp, rigid, s, geometry)  %inicializa o noh
+            if nargin > 6
+                nd.geometry = geometry;
+            else 
+                nd.geometry = [];
+            end
             nd.mcs = mcs;
             nd.mcg = mcg;
             nd.Inertia = Inertia;
@@ -28,6 +34,8 @@ classdef node < handle
                 N = petersinp.N;
                 b = petersinp.b;
                 a = petersinp.a;
+                nd.geometry.a = a;
+                nd.geometry.b = b;
                 nd.aero = peter(n,m,N,b,a);
                 nd.aero.alpha0 = petersinp.alpha0;
                 nd.aero.clalpha = petersinp.clalpha;
