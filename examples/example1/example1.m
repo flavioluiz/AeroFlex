@@ -54,6 +54,8 @@ function example1
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
+    st_modes = structural_modes(ap);
+    st_modes.plot_mode(ap,1);
     
     %%%%%%%%%%%% FINDS TRIM CONDITION %%%%%%%%%%%%%%%%%%%%
     %%%% FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
@@ -66,29 +68,7 @@ function example1
     [vecequilibrio, Xeq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
     toc;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    
-    %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
-    tic;
-    manete = vecequilibrio(3);    deltaflap = vecequilibrio(2);
-    thetaeq = vecequilibrio(1);    straineq = Xeq;
-    betaeq = [0 V*cos(thetaeq) -V*sin(thetaeq) 0 0 0]';
-    keq = [thetaeq 0 0 altitude]';
-    [Alin Aaeroelast Abody] = linearize(ap, straineq, betaeq, keq, manete, deltaflap, Vwind);
-    toc;
-    
-    fprintf('Linearização numérica:\n');
-    autoval=eig(Alin);
-    fprintf('\nAutovalores da dinâmica completa com parte real maior que -10:');
-    autoval(find(autoval>-10))
-    
-    fprintf('\nAutovalores da aeroelasticidade com parte real maior que -10 (asa engastada):');
-    autoaeroelast = eig(Aaeroelast);
-    autoaeroelast(find(autoaeroelast>-10))
-    
-    fprintf('\nAutovalores da matriz do corpo:');
-    autobody = eig(Abody)
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%% NONLINEAR SIMULATION %%%%%%%%%%%%%%%%%
@@ -104,10 +84,8 @@ function example1
     deltaflap = vecequilibrio(2);
     manete = vecequilibrio(3);
     
-    %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%
-    T=[0.00 0.49 0.50 0.74 0.75 0.99 1.00 100];
-    elev=[0 0 1 1 -1 -1 0 0]*0;
-    doublet = @(t) (deltaflap+interp1(T,elev,t));
+    %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%    
+    doublet = @(t) (deltaflap);
     strain0 = Xeq*0;
     betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
     keq = [theta;0;0;altitude];
