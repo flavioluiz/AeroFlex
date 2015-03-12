@@ -46,7 +46,7 @@ function example1
 
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 3; %number of elements
+    numele = 10; %number of elements
     damping = 0.04; %damping coefficient (eg.: 0.0001)
     rigmult = 1; %multiplier for the rigidity matrix (eg.: 1)
     ap = load_structure(numele,damping,rigmult); % this creates a flexible
@@ -54,19 +54,40 @@ function example1
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
+    %%%%%%%%%%%% MODAL ANALYSIS %%%%%%%%%%%%%%%%%%%%%%%%%%
+    % find structural natural frequencies and modal shapes
     st_modes = structural_modes(ap);
-    st_modes.plot_mode(ap,1);
+    fprintf('Natural frequencies (in Hz):\n');
+    st_modes.frequencies(1:5) % first 5 natural frequencies
+    %plot results
+    figure('color','w','name','mode 1');
+    st_modes.plot_mode(ap,1); % plot modal shape 1
+    view(30,45); axis equal; colormap winter;
+    figure('color','w','name','mode 2');
+    st_modes.plot_mode(ap,2); % plot modal shape 1
+    view(30,45); axis equal; colormap winter;
     
-    %%%%%%%%%%%% FINDS TRIM CONDITION %%%%%%%%%%%%%%%%%%%%
+    fprintf('press any key to equilibrium calculation\n\n');
+    pause;
+    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION%%%%%%%%%%%%%%
     %%%% FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
-    altitude = 20000; % meters
-    V = 15;           % m/s
-    Vwind = 0;        % m/s 
-    tic;
+    altitude = -1; % meters
+    V = -1;           % m/s
+    Vwind = 0;        % m/s     
     tracao = 0;
     deltaflap = 0;
-    [vecequilibrio, Xeq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
-    toc;
+    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
+    
+    figure('color','w');
+    % plot structure without deformation:
+    update(ap,strain_eq*0,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
+    plotairplane3d(ap); 
+    % plot deformed structure (equilibrium condition):
+    update(ap,strain_eq,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
+    plotairplane3d(ap); 
+    view(30,45); axis equal; colormap winter;
+    
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
     
@@ -74,55 +95,34 @@ function example1
     %%%%%%%%%%%%%%% NONLINEAR SIMULATION %%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % Initial conditions
-    deltau = 0;
-    deltav = 0;
-    deltaw = 0;
-    deltaalfa = 0;
-    tSIM = input('Tempo de simulação: ');
+
+    tSIM = input('Simulation time: (seconds)');
     
-    theta = vecequilibrio(1);
-    deltaflap = vecequilibrio(2);
-    manete = vecequilibrio(3);
-    
-    %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%    
-    doublet = @(t) (deltaflap);
-    strain0 = Xeq*0;
-    betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
-    keq = [theta;0;0;altitude];
-    beta0 = [deltau; V*cos(theta+deltaalfa)+deltav; -V*sin(theta+deltaalfa)+deltaw;0;0;0];
-    k0 = [theta+deltaalfa;0;0;altitude];
+    aerodynamic_surface_pos = 0; % no aerodynamic surfaces!
+    engine_position = 0;     % no engine!
+    beta0 = [0; 0;0;0;0;0]; % rigid body speeds
+    k0 = [0;0;0;0];         % rigid body position/orientation
+    strain0 = strain_eq*0;
+    % simulation:  
     tic;
-    [tNL xNL xpNL lambdaNL betaNL kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)manete, doublet, 'implicit');
+    [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'implicit');
     toc;
     
-    for i = 1:size(tNL,1)
-        dxNL(i,1:ap.NUMele*4) =  xNL(i,1:ap.NUMele*4) - Xeq(1:ap.NUMele*4);
-    end
-    longfig = figure;
-    subplot(3,2,1); plot(tNL,dxNL,'r'); legend('strain');hold all;
-    subplot(3,2,2); plot(tNL,xpNL,'r'); legend('strainp');hold all;
-    subplot(3,2,3); plot(tNL,betaNL(:,2)-V*cos(theta),'r'); xlabel('t'); ylabel('beta(2)'); hold all;%velocidade eixo y
-    subplot(3,2,4); plot(tNL,betaNL(:,3)+V*sin(theta),'r'); xlabel('t'); ylabel('beta(3)'); hold all;%velocidade eixo z
-    subplot(3,2,5); plot(tNL,betaNL(:,4),'r'); xlabel('t'); ylabel('q');hold all;%q
-    subplot(3,2,6); plot(tNL,kineticNL(:,4),'r'); xlabel('t'); ylabel('H');hold all; %H
-    
     dt = 0.1;
-    [ts Xs] = changedatarate(tNL,xNL,dt);
-    ts = tNL; Xs = xNL;
+    [ts, Xs] = changedatarate(tNL,strainNL,dt);
+
+    tip_displacement = zeros(length(ts),1);
     for i = 1:size(ts,1)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        desloctip(i) = ap.membros{1}(numele).node3.h(3);
+        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
     end
-    figure('name','Wing tip displacement');
-    plot(ts,desloctip); xlabel('Time (s)'); ylabel('Tip displacement (m)');
+    figure('color','w','name','Wing tip displacement');
+    plot(ts,tip_displacement);
+    xlabel('Time (s)'); ylabel('Tip displacement (m)');
+    grid on;
     
-    
-        dt = 1e-4;
-        %[ts Xs] = changedatarate(tNL,xNL,dt);
-        for i = 1:size(ts,1)
-            Xs(i,:) =  Xs(i,:) + Xeq(1:ap.NUMele*4)*0;
-        end
-        airplanemovie(ap, ts, Xs,dt); axis equal;
+    figure('color','w');
+    airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
     
 
 end
@@ -173,8 +173,7 @@ function membro = create_flexible_member(num_elements,amort, rigidez)
     % how the following function creates the structure. you should modify
     % this function to define the correct parameters for each structural
     % node)
-    membro = create_uniform_structure(pos_cg, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);
-    
+    membro = create_uniform_structure(pos_cg, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);    
     
 end
  

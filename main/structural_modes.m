@@ -32,7 +32,7 @@ classdef structural_modes < handle
         end
         function plot_mode(st_modes, ap, num_mode)
             strain = st_modes.eigen_vectors(:,num_mode);
-            update(ap,strain/50,zeros(size(strain)),zeros(size(strain)),zeros(sum(ap.membNAEDtotal),1));
+            update(ap,strain/25,zeros(size(strain)),zeros(size(strain)),zeros(sum(ap.membNAEDtotal),1));
             plotairplane3d(ap);
         end
         

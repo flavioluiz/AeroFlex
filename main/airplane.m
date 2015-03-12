@@ -135,20 +135,42 @@ classdef airplane < handle
                 update(ap.membros{i});
             end
         end
-        function airplanemovie(ap, t, strain,dt)
-            aviobj = avifile('teste.avi', 'fps', 1/dt);
-            h = figure;
-            for i = 1:size(t,1);
-                update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
-                clf(h);
-                plotairplane3d(ap);
-                view(45,45);
-                axis([0 20 -10 10 -5 5]);
-                frame = getframe(h);
-                aviobj = addframe(aviobj,frame);
-                [i, size(t,1)]
+        function airplanemovie(ap, t, strain,dt, filename, format)
+            if nargin < 5
+                aviobj = avifile(strcat(filename,'.avi'), 'fps', 1/dt);
+                h = figure;
+                for i = 1:size(t,1);
+                    update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
+                    clf(h,'reset');
+                    plotairplane3d(ap);
+                    view(45,45);
+                    axis([0 20 -10 10 -5 5]);
+                    frame = getframe(h);
+                    aviobj = addframe(aviobj,frame);
+                    [i, size(t,1)]
+                end
+                aviobj = close(aviobj);
+            elseif format == 'gif'
+                h = figure;
+                for i = 1:size(t,1);
+                    update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
+                    clf(h);
+                    plotairplane3d(ap); colormap winter;
+                    view(45,45);
+                    axis([0 20 -10 10 -5 5]);
+                    frame = getframe(1);
+                    im = frame2im(frame);
+                    [imind,cm] = rgb2ind(im,128); 
+                    if i == 1;
+                        imwrite(imind,cm,strcat(filename,'.gif'),'gif', 'Loopcount',inf);
+                    else
+                        imwrite(imind,cm,strcat(filename,'.gif'),'gif','WriteMode','append', 'DelayTime',dt);
+                    end                    
+                    [i, size(t,1)]
+                end
+            else
+                fprintf('INVALID VIDEO FORMAT \n');
             end
-            aviobj = close(aviobj);
         end        
         function [A Aaero Abody] = linearize(ap, straineq, betaeq, keq, manete, deltaflap, Vwind)
             if ap.NUMaedstates == 0
@@ -301,8 +323,7 @@ classdef airplane < handle
             lambda = X(:,(2*ap.NUMele*4+1):(2*ap.NUMele*4+ap.NUMaedstates));
             beta = X(:,(2*ap.NUMele*4+ap.NUMaedstates+1):(2*ap.NUMele*4+ap.NUMaedstates+6));
             kinetic = X(:,(2*ap.NUMele*4+ap.NUMaedstates+7):(2*ap.NUMele*4+ap.NUMaedstates+10));
-        end
-        
+        end       
     end
 end
 
