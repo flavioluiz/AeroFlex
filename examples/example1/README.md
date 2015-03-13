@@ -51,4 +51,4 @@ Simulation
 
 ![Tip deflection](./simu_tip.jpg) 
 
-![Simulation](./simulation.gif) 
+![Simulation](./simu.gif) 
