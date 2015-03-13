@@ -202,33 +202,34 @@ The method 'simulation' is used to (!) simulate the system. In this example, we 
 initial condition zero strain.
 
 	tSIM = input('Simulation time: (seconds)');    
-    aerodynamic_surface_pos = 0; % no aerodynamic surfaces!
-    engine_position = 0;     % no engine!
-    beta0 = [0; 0;0;0;0;0]; % rigid body speeds
-    k0 = [0;0;0;0];         % rigid body position/orientation
-    strain0 = strain_eq*0;
-    % simulation:  
-    tic;
-    [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'implicit');
-    toc;
+	aerodynamic_surface_pos = 0; % no aerodynamic surfaces!
+	engine_position = 0;     % no engine!
+	beta0 = [0; 0;0;0;0;0]; % rigid body speeds
+	k0 = [0;0;0;0];         % rigid body position/orientation
+	strain0 = strain_eq*0;
+	% simulation:  
+	tic;
+	[tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'implicit');
+	toc;
 
 The following code is used to compute the tip displacement of the wing and make a graphic:
-    dt = 0.1;
-    [ts, Xs] = changedatarate(tNL,strainNL,dt);
-    tip_displacement = zeros(length(ts),1);
-    for i = 1:size(ts,1)
-        update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
-    end
-    figure('color','w','name','Wing tip displacement');
-    plot(ts,tip_displacement);
-    xlabel('Time (s)'); ylabel('Tip displacement (m)');
-    grid on;
+
+	dt = 0.1;
+	[ts, Xs] = changedatarate(tNL,strainNL,dt);
+	tip_displacement = zeros(length(ts),1);
+	for i = 1:size(ts,1)
+		update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
+		tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
+	end
+	figure('color','w','name','Wing tip displacement');
+	plot(ts,tip_displacement);
+	xlabel('Time (s)'); ylabel('Tip displacement (m)');
+	grid on;
 
 	
 ![Tip deflection](./simu_tip.jpg) 
 
 The method 'animate' can be used to create an animation, given a time vector and a strain matrix:
-    airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
+	airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
 
 ![Simulation](./simu.gif) 
