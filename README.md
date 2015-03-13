@@ -22,7 +22,7 @@ Several applications can be studied using this tool:
 ## Usage and examples
 
 My goal is to include several examples and tutorials of use of this tool, with the hope that it can be
-used by other people. I am working on it!
+used by other people. I am still working on it. You can check some of them [here](./examples/README.md).
 
 While these examples and tutorials are not ready, you can check
 the sample file `./FlyingWingExample.m`. This file initializes an airplane, finds its equilibrium position, 
