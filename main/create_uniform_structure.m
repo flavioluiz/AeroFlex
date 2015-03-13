@@ -16,4 +16,5 @@ function membro = create_uniform_structure(pos_cg, length, Inertia, mcs, KG, CG,
             membro(i) = element(noh((i-1)*3+1),noh((i-1)*3+2),noh((i-1)*3+3),rot,ds,KG, CG);
             membro(i).setstrain([0 0 0 0],[0 0 0 0]);
     end
+    membro(1).node1.aero.setmembermatrices(membro);
 end

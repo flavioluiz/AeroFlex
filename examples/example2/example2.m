@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%      AeroFlex - Example 1  - Structural Dynamics                    %
-% - computes eigenvalues/eigenvectors of linear structural dynamics   %
-% - finds equilibrium (only gravity)                                  %
-% - simulation (beam starts undeformed, goes to equilibrium)          %
+%      AeroFlex - Example 2  - Aeroelasticity                         %
+% - finds equilibrium (aerodynamics + gravity)                        %
+% - linearizes to verify local stability                              %
+% - find flutter speed:    linear vs nonlinear beam deflections       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-function example1
+function example2
     clc;
     clear all;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,7 +27,7 @@ function example1
     softPARAMS.g = 9.8; % gravity in m/s^2    
     softPARAMS.isITER = 1; % iterative equilibrium determination?
     softPARAMS.numITER = 10; % number of iterations for equilibrium determination
-    softPARAMS.modAED = 0; % AERODYNAMIC MODEL: 
+    softPARAMS.modAED = 1; % AERODYNAMIC MODEL: 
                                     %0-Steady;
                                     %1-Quasi-steady;
                                     %2-Quasi-steady with added mass;
@@ -67,9 +67,9 @@ function example1
     pause;
     %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION AND PLOT%%%%%%%%%%%%%%
     % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
-    altitude = -1; % meters
-    V = -1;           % m/s
-    Vwind = 0;        % m/s     
+    altitude = 20000; % meters
+    V = 0;           % m/s
+    Vwind = 15;        % m/s     
     throttle = 0;
     deltaflap = 0;
     [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);
@@ -150,7 +150,23 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     CG = damp_ratio*diag([K11 K22 K33 K44]);
     
     % aerodynamic data
-    aeroparams = [];
+    aeroparams.n = 2; aeroparams.m = 2;
+    c = 1;
+    aeroparams.b = c/2;
+    aeroparams.N = 0;
+    aeroparams.a = 0;
+
+    aeroparams.alpha0 = -5*pi/180;
+    aeroparams.clalpha = 2*pi;
+    aeroparams.cm0 = 0;
+    aeroparams.cd0 = 0.02;
+    
+    aeroparams.cldelta = 0.01;
+    aeroparams.cmdelta = -0.1;
+    aeroparams.ndelta = 1; %numero da superficie de controle ativada
+    
+    
+    % cg position, mass and inertia data
     
     pos_cg = [0 0.3 0]; % position of section gravity center
                         % relative to elastic axis

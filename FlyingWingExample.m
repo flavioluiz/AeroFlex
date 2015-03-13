@@ -43,9 +43,9 @@ function FlyingWingExample
 
     
     %%%%%%%%%%%% AIRPLANE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 1; %number of elements
+    numele = 3; %number of elements
     amort = 0.04; %damping coefficient (eg.: 0.0001)
-    rigidez = 1000; %multiplier for the rigidity matrix (eg.: 1)
+    rigidez = 1; %multiplier for the rigidity matrix (eg.: 1)
     ap = carregaasavoadora(numele,amort,rigidez); % this creates a flexible
                                         %airplane object with numele elements
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

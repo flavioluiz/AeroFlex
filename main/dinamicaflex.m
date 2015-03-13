@@ -3,7 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [xp bp lambdap kineticp] = dinamicaflex(t,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,V, manete, deltaflap, FLAG)
+function [xp, bp, lambdap, kineticp] = dinamicaflex(t,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,V, manete, deltaflap, FLAG)
     global softPARAMS;
     H = kinetic(4);
     
@@ -70,7 +70,7 @@ function [xp bp lambdap kineticp] = dinamicaflex(t,strain, strainp, strainpp,lam
     FAERO = [];   MAERO = [];   FLAMBDA = [];
     for i = 1:ap.NUMmembers
         if ~isempty(ap.membros{i}(1).node1.aero)
-            [FAEROm MAEROm FLAMBDAm] = aeroforceandmoment(ap.membros{i}(1).strainm, ap.membros{i}(1).strainpm, ap.membros{i}(1).strainppm,ap.membros{i}(1).lambdam,beta,betap,ap.membros{i},V,rho,deltaflap);
+            [FAEROm, MAEROm, FLAMBDAm] = aeroforceandmoment(ap.membros{i}(1).strainm, ap.membros{i}(1).strainpm, ap.membros{i}(1).strainppm,ap.membros{i}(1).lambdam,beta,betap,ap.membros{i},V,rho,deltaflap);
             FAERO = [FAERO; FAEROm];
             MAERO = [MAERO; MAEROm];
             FLAMBDA = [FLAMBDA; FLAMBDAm];
