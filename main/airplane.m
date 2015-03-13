@@ -232,7 +232,7 @@ classdef airplane < handle
                 %if softPARAMS.plota3d
                 %    figure(100);plotairplane3d(ap);
                 %end
-                strainEQ = fsolve(@equilibraestrutura, strain,options,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, [deltaflap 0 0]);
+                strainEQ = fsolve(@equilibraestrutura, strain,options, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, [deltaflap 0 0]);
                 if softPARAMS.plota3d
                     figure(100);plotairplane3d(ap);
                 end
@@ -253,7 +253,7 @@ classdef airplane < handle
                         tracao = vec(3);
                         beta(3) = -V*sin(theta);
                         beta(2) = V*cos(theta);
-                        strainEQ = fsolve(@equilibraestrutura, strainEQ,options,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, deltaflap);
+                        strainEQ = fsolve(@equilibraestrutura, strainEQ,options, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, deltaflap);
                         if softPARAMS.plota3d
                             figure(100);plotairplane3d(ap);
                         end
@@ -266,7 +266,7 @@ classdef airplane < handle
                 kinetic(1) = theta;
                 beta(3) = -0*sin(theta);
                 beta(2) = 0*cos(theta);
-                strainEQ = fsolve(@equilibraestrutura, strain,options,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, deltaflap);
+                strainEQ = fsolve(@equilibraestrutura, strain,options, strainp, strainpp,lambda,beta,betap,kinetic,ap,Vwind, tracao, deltaflap);
                 if softPARAMS.plota3d
                             figure(100);plotairplane3d(ap);
                 end
@@ -369,9 +369,8 @@ switch flagLONG
 end
 end
 
-function zero = equilibraestrutura(vec,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,V, tracao, deltaflap)
+function zero = equilibraestrutura(strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,V, tracao, deltaflap)
     global softPARAMS;
-    strain = vec;
     %strain = vec(4:(3+size(strain,2)))
     FLAG = 0; % equilibrium dynamics
     [Xp bp lambdap]= dinamicaflex(0,strain, strainp, strainpp,lambda,beta,betap,kinetic,ap,V, tracao, deltaflap, FLAG);
