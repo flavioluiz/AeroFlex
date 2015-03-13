@@ -27,12 +27,12 @@ function example2
     softPARAMS.g = 9.8; % gravity in m/s^2    
     softPARAMS.isITER = 1; % iterative equilibrium determination?
     softPARAMS.numITER = 10; % number of iterations for equilibrium determination
-    softPARAMS.modAED = 1; % AERODYNAMIC MODEL: 
+    softPARAMS.modAED = 2; % AERODYNAMIC MODEL: 
                                     %0-Steady;
                                     %1-Quasi-steady;
                                     %2-Quasi-steady with added mass;
                                     %3-Unsteady(Peters);
-    softPARAMS.updateStrJac = 1; % Structural Jacobians updates:
+    softPARAMS.updateStrJac = 0; % Structural Jacobians updates:
                                     % 0 - Never;
                                     % 1 - Only in equilib calculation;
                                     % 2 - Always
@@ -43,46 +43,40 @@ function example2
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
     numele = 3; %number of elements
-    damping = 0.04; %damping coefficient (damping proportional to rigidity matrix)
+    damping = 0.01; %damping coefficient (damping proportional to rigidity matrix)
     ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    %%%%%%%%%%%% MODAL ANALYSIS %%%%%%%%%%%%%%%%%%%%%%%%%%
-    % find structural natural frequencies and modal shapes
-    st_modes = structural_modes(ap);
-    fprintf('Natural frequencies (in Hz):\n');
-    st_modes.frequencies(1:6) % first 6 natural frequencies
     
+    Vwind = 10;
     
-    %plot results    
-    figure('color','w','name','mode 1');
-    subplot(1,2,1); st_modes.plot_mode(ap,1); % plot modal shape 1
-    view(30,45); axis equal; colormap winter;
-    subplot(1,2,2); st_modes.plot_mode(ap,2); % plot modal shape 1
-    view(30,45); axis equal; colormap winter;
-    
-    fprintf('press any key to equilibrium calculation\n\n');
-    pause;
-    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION AND PLOT%%%%%%%%%%%%%%
+    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION %%%%%%%%%%%%%%
     % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
     altitude = 20000; % meters
     V = 0;           % m/s
-    Vwind = 15;        % m/s     
-    throttle = 0;
-    deltaflap = 0;
-    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);
+        throttle = 0;
+        deltaflap = 0;
+        [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);    
+
     
-    figure('color','w');
-    % plot structure without deformation:
-    update(ap,strain_eq*0,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
-    plotairplane3d(ap); 
-    % plot deformed structure (equilibrium condition):
-    update(ap,strain_eq,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
-    plotairplane3d(ap); 
-    view(30,45); axis equal; colormap winter;
-    
+    while Vwind>0
+          Vwind = input('speed: ');        % m/s    
+ 
+
+          %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
+
+    tic;
+    betaeq = [0 0 0 0 0 0]';
+    keq = [0 0 0 altitude]';
+    [Alin, Aaeroelast, Abody] = linearize(ap, strain_eq*0, betaeq, keq, throttle, deltaflap, Vwind);
+    toc;        
+    fprintf('Linearização numérica:\n');  
+    fprintf('\nAutovalores da aeroelasticidade com parte real maior que -10 (asa engastada):');
+    autoaeroelast = eig(Aaeroelast);
+    autoaeroelast(find(autoaeroelast>0))
+    end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -153,24 +147,24 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     aeroparams.n = 2; aeroparams.m = 2;
     c = 1;
     aeroparams.b = c/2;
-    aeroparams.N = 0;
-    aeroparams.a = 0;
+    aeroparams.N = 4;
+    aeroparams.a = 0.5;
 
-    aeroparams.alpha0 = -5*pi/180;
+    aeroparams.alpha0 = -5*pi/180*0;
     aeroparams.clalpha = 2*pi;
     aeroparams.cm0 = 0;
     aeroparams.cd0 = 0.02;
     
-    aeroparams.cldelta = 0.01;
-    aeroparams.cmdelta = -0.1;
-    aeroparams.ndelta = 1; %numero da superficie de controle ativada
+    aeroparams.cldelta = 0.01*0;
+    aeroparams.cmdelta = -0.1*0;
+    aeroparams.ndelta = 0; %numero da superficie de controle ativada
     
     
     % cg position, mass and inertia data
     
-    pos_cg = [0 0.3 0]; % position of section gravity center
+    pos_cg = [0 0.25 0]; % position of section gravity center
                         % relative to elastic axis
-    geometry.a = 0.5;
+    geometry.a = 0.0;
     geometry.b = 0.5;    
     I22 = 0.0;
     I33 = 0.1;
