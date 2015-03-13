@@ -3,16 +3,12 @@
 % - computes eigenvalues/eigenvectors of linear structural dynamics   %
 % - finds equilibrium (only gravity)                                  %
 % - simulation (beam starts undeformed, goes to equilibrium)          %
-%                                                                     %
-% Several things not working properly yet:                            %
-%     - graphical results  (problems with video rate)                 %
-%     - should validate with exact beam results (at least eigenvalues)%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 function example1
-    clc
-    
+    clc;
+    clear all;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % AeroFlex Main Folder:                              %
     addpath('..\..\main');    
@@ -46,10 +42,9 @@ function example1
 
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 10; %number of elements
-    damping = 0.04; %damping coefficient (eg.: 0.0001)
-    rigmult = 1; %multiplier for the rigidity matrix (eg.: 1)
-    ap = load_structure(numele,damping,rigmult); % this creates a flexible
+    numele = 20; %number of elements
+    damping = 0.04; %damping coefficient (damping proportional to rigidity matrix)
+    ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,25 +53,26 @@ function example1
     % find structural natural frequencies and modal shapes
     st_modes = structural_modes(ap);
     fprintf('Natural frequencies (in Hz):\n');
-    st_modes.frequencies(1:5) % first 5 natural frequencies
-    %plot results
+    st_modes.frequencies(1:6) % first 6 natural frequencies
+    
+    
+    %plot results    
     figure('color','w','name','mode 1');
-    st_modes.plot_mode(ap,1); % plot modal shape 1
+    subplot(1,2,1); st_modes.plot_mode(ap,1); % plot modal shape 1
     view(30,45); axis equal; colormap winter;
-    figure('color','w','name','mode 2');
-    st_modes.plot_mode(ap,2); % plot modal shape 1
+    subplot(1,2,2); st_modes.plot_mode(ap,2); % plot modal shape 1
     view(30,45); axis equal; colormap winter;
     
     fprintf('press any key to equilibrium calculation\n\n');
     pause;
-    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION%%%%%%%%%%%%%%
-    %%%% FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
+    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION AND PLOT%%%%%%%%%%%%%%
+    % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
     altitude = -1; % meters
     V = -1;           % m/s
     Vwind = 0;        % m/s     
-    tracao = 0;
+    throttle = 0;
     deltaflap = 0;
-    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,tracao,deltaflap);
+    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);
     
     figure('color','w');
     % plot structure without deformation:
@@ -127,19 +123,19 @@ function example1
 
 end
 
-function ap = load_structure(numele, amort, rigidez)
+function ap = load_structure(numele, damp_ratio)
     % member initialization
-    membro = create_flexible_member(numele,amort,rigidez);
+    flexible_member = create_flexible_member(numele,damp_ratio);
     
     %set member origin node position and orientation:
-    membro(1).seth0([0 -0.0 0 1 0 0 0 1 0 0 0 1]'); 
-    update(membro); % initialize displacements for each member node
+    flexible_member(1).seth0([0 -0.0 0 1 0 0 0 1 0 0 0 1]'); 
+    update(flexible_member); % initialize displacements for each member node
     fus = []; % no fuselage
     motor1 = []; % no engines
-    ap = airplane({membro}, fus, [motor1]);
+    ap = airplane({flexible_member}, fus, [motor1]);
 end
 
-function membro = create_flexible_member(num_elements,amort, rigidez)
+function flexible_member = create_flexible_member(num_elements,damp_ratio)
     
 
     % beam length
@@ -150,10 +146,10 @@ function membro = create_flexible_member(num_elements,amort, rigidez)
     K22 = 1e4; %GJ
     K33 = 2e4; %flat bend: EI
     K44 = 4e6; %chord bend: EI
-    KG = rigidez*diag([K11 K22 K33 K44]);
+    KG = diag([K11 K22 K33 K44]);
     
     % sectional damping matrix
-    CG = diag([amort*K11 amort*K22 amort*K33 amort*K44]);    % tese: 0.00005*KG;
+    CG = damp_ratio*diag([K11 K22 K33 K44]);
     
     % aerodynamic data
     aeroparams = [];
@@ -165,7 +161,7 @@ function membro = create_flexible_member(num_elements,amort, rigidez)
     I22 = 0.0;
     I33 = 0.1;
     I11 = 0.1;
-    mcs = 0.75;
+    mcs = 0.75; %mass per unit length (kg/m)
     Inertia = diag([I11 I22 I33]);
     
     % the following function creates a uniform structure automatically; if
@@ -173,7 +169,6 @@ function membro = create_flexible_member(num_elements,amort, rigidez)
     % how the following function creates the structure. you should modify
     % this function to define the correct parameters for each structural
     % node)
-    membro = create_uniform_structure(pos_cg, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);    
+    flexible_member = create_uniform_structure(pos_cg, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);    
     
 end
- 
