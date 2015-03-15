@@ -144,18 +144,27 @@ The class 'structural_modes' computes the structural dynamic modes. The followin
 code computes the first 6 natural frequencies:
 
     st_modes = structural_modes(ap);
-    fprintf('Natural frequencies (in Hz):\n');
-    st_modes.frequencies(1:6) % first 6 natural frequencies
+    numerical_freqs = st_modes.frequencies(1:6) % first 6 natural frequencies
     
+Numerical results are compared against exact solution using the file '.\exact.m'.
 
- Mode | Frequency (Hz)
-  --- |   ---
-  1st |  0.3565
-  2nd |  2.2200
-  3rd |  5.0442
-  4th |  6.1471
-  5th |  8.7181
-  6th | 11.9868
+	exact_freqs = sort(exact(4,1,1));
+	fprintf('Natural frequencies (in Hz):\n');
+	fprintf('| Numerical | Exact \n');
+	fprintf('| %.3f | %.3f \n', [numerical_freqs, exact_freqs]')
+
+The following table show the comparison when using 100 elements.
+
+	
+ Mode                   | Numerical | Exact 
+                             | freq (Hz) | freq (Hz)
+ ---                        |   ---        |   ---
+1st (vert. bending)  |  0.357     | 0.357 
+2nd (vert. bending) |  2.237     | 2.237 
+3rd (torsion)           |  4.941     | 4.941 
+4th (hor. bending)   |  5.042     | 5.048 
+5th (vert. bending)  |  6.266     | 6.264 
+6th (vert. bending)  |  12.284   | 12.274 
 
 The modal shapes can be ploted using 'plot_mode' method:
     
@@ -230,6 +239,7 @@ The following code is used to compute the tip displacement of the wing and make 
 ![Tip deflection](./simu_tip.jpg) 
 
 The method 'animate' can be used to create an animation, given a time vector and a strain matrix:
+
 	airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
 
 ![Simulation](./simu.gif) 

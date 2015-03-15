@@ -42,7 +42,7 @@ function example1
 
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 3; %number of elements
+    numele = 10; %number of elements
     damping = 0.04; %damping coefficient (damping proportional to rigidity matrix)
     ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
@@ -52,9 +52,11 @@ function example1
     %%%%%%%%%%%% MODAL ANALYSIS %%%%%%%%%%%%%%%%%%%%%%%%%%
     % find structural natural frequencies and modal shapes
     st_modes = structural_modes(ap);
+    numerical_freqs = st_modes.frequencies(1:6);
+    exact_freqs = sort(exact(4,1,1));
     fprintf('Natural frequencies (in Hz):\n');
-    st_modes.frequencies(1:6) % first 6 natural frequencies
-    
+    fprintf('| Numerical | Exact \n');
+    fprintf('| %.3f | %.3f \n', [numerical_freqs, exact_freqs]')
     
     %plot results    
     figure('color','w','name','mode 1');
@@ -152,9 +154,9 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     % aerodynamic data
     aeroparams = [];
     
-    pos_cg = [0 0.3 0]; % position of section gravity center
+    pos_cg = [0 0.0 0]; % position of section gravity center
                         % relative to elastic axis
-    geometry.a = 0.5;
+    geometry.a = 0.0;
     geometry.b = 0.5;    
     I22 = 0.0;
     I33 = 0.1;
