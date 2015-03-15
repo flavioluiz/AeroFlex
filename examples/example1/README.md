@@ -156,15 +156,15 @@ Numerical results are compared against exact solution using the file '.\exact.m'
 The following table show the comparison when using 100 elements.
 
 	
- Mode                   | Numerical | Exact 
-                             | freq (Hz) | freq (Hz)
- ---                        |   ---        |   ---
-1st (vert. bending)  |  0.357     | 0.357 
-2nd (vert. bending) |  2.237     | 2.237 
-3rd (torsion)           |  4.941     | 4.941 
-4th (hor. bending)   |  5.042     | 5.048 
-5th (vert. bending)  |  6.266     | 6.264 
-6th (vert. bending)  |  12.284   | 12.274 
+	|  Mode                   | Numerical | Exact     |
+	|  	         		 		  | freq (Hz) | freq (Hz) |
+	| --------------------- |   --------  |   -------   |
+	|1st (vert. bending)  |  0.357     | 0.357     |
+	|2nd (vert. bending) |  2.237     | 2.237     |
+	|3rd (torsion)           |  4.941     | 4.941     |
+	|4th (hor. bending)   |  5.042     | 5.048     |
+	|5th (vert. bending)  |  6.266     | 6.264     |
+	|6th (vert. bending)  |  12.284   | 12.274   |
 
 The modal shapes can be ploted using 'plot_mode' method:
     
