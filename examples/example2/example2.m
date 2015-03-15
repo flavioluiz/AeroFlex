@@ -27,12 +27,12 @@ function example2
     softPARAMS.g = 9.8; % gravity in m/s^2    
     softPARAMS.isITER = 1; % iterative equilibrium determination?
     softPARAMS.numITER = 10; % number of iterations for equilibrium determination
-    softPARAMS.modAED = 2; % AERODYNAMIC MODEL: 
+    softPARAMS.modAED = 3; % AERODYNAMIC MODEL: 
                                     %0-Steady;
                                     %1-Quasi-steady;
                                     %2-Quasi-steady with added mass;
                                     %3-Unsteady(Peters);
-    softPARAMS.updateStrJac = 0; % Structural Jacobians updates:
+    softPARAMS.updateStrJac = 1; % Structural Jacobians updates:
                                     % 0 - Never;
                                     % 1 - Only in equilib calculation;
                                     % 2 - Always
@@ -43,40 +43,39 @@ function example2
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
     numele = 3; %number of elements
-    damping = 0.01; %damping coefficient (damping proportional to rigidity matrix)
+    damping = 0.0001; %damping coefficient (damping proportional to rigidity matrix)
     ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    
-    Vwind = 10;
-    
+        
+        
     %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION %%%%%%%%%%%%%%
     % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
-    altitude = 20000; % meters
+    altitude = 19931.7; % meters
     V = 0;           % m/s
-        throttle = 0;
-        deltaflap = 0;
-        [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);    
-
-    
-    while Vwind>0
-          Vwind = input('speed: ');        % m/s    
- 
-
-          %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
-
-    tic;
+    throttle = 0;
+    deltaflap = 0;
+    Vwind = 10;
+    %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
+    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);        
     betaeq = [0 0 0 0 0 0]';
-    keq = [0 0 0 altitude]';
-    [Alin, Aaeroelast, Abody] = linearize(ap, strain_eq*0, betaeq, keq, throttle, deltaflap, Vwind);
-    toc;        
-    fprintf('Linearização numérica:\n');  
-    fprintf('\nAutovalores da aeroelasticidade com parte real maior que -10 (asa engastada):');
-    autoaeroelast = eig(Aaeroelast);
-    autoaeroelast(find(autoaeroelast>0))
-    end
+    keq = [0 0 0 altitude]';    
+    [flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq, betaeq, keq, throttle, deltaflap);
+
+    flut_speed
+    flut_eig_val
+    pause;
+%     
+%     for Vwind = 15:1:35
+%         tic;
+%         [Alin, Aaeroelast, Abody] = linearize(ap, strain_eq, betaeq, keq, throttle, deltaflap, Vwind);
+%         toc;        
+%         fprintf('Linearização numérica:\n');  
+%         fprintf('\nAutovalores da aeroelasticidade com parte real maior que -10 (asa engastada):');
+%         autoaeroelast = eig(Aaeroelast);
+%         autoaeroelast(find(autoaeroelast>0))
+%     end
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -148,7 +147,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     c = 1;
     aeroparams.b = c/2;
     aeroparams.N = 4;
-    aeroparams.a = 0.5;
+    aeroparams.a = 0.;
 
     aeroparams.alpha0 = -5*pi/180*0;
     aeroparams.clalpha = 2*pi;
@@ -162,7 +161,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     
     % cg position, mass and inertia data
     
-    pos_cg = [0 0.25 0]; % position of section gravity center
+    pos_cg = [0 0 0]; % position of section gravity center
                         % relative to elastic axis
     geometry.a = 0.0;
     geometry.b = 0.5;    
