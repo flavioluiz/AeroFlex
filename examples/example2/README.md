@@ -222,5 +222,5 @@ Then, for a speed of 26 m/s (above the flutter speed):
 
 ![Simulation](simu_unstable.jpg)
 
-![Simulation](simu_unstable.gif)
+![Simulation](simulation_unstable.gif)
 

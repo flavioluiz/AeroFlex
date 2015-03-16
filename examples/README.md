@@ -19,12 +19,14 @@ and performs the following tasks:
 
 Example 2 - Linear and nonlinear Aeroelasticity
 ----
-TO DO
 
+You can check this example [here](./example2/README.md):
 * The same flexible beam of example 1 is studied, by including aerodynamics;
 * Flutter speed is found taking into account the nonlinear structural displacements
 and compared againt linear case;
 * Simulations of the wing under different conditions (above or under flutter speed) is performed;
+
+![Unstable Aeroelasticity](./example2/simulation_unstable.gif)
 
 
 Example 3 - Aileron reversals study
