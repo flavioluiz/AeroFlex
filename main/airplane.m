@@ -178,6 +178,8 @@ classdef airplane < handle
             else
                 lambda0 = zeros(ap.NUMaedstates,1);
             end
+            update(ap,straineq,straineq*0,straineq*0,lambda0);
+            updateStrJac(ap);
             x = [straineq'; zeros(size(straineq')); lambda0; betaeq; keq];
             xp = zeros(size(x));
             
