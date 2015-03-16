@@ -15,8 +15,10 @@
 % this would allow visualizing how the eigenvalues change with speed.
 
 function [unstable_speed, unstable_eig_value, unstable_eig_vec] = ...
-           flutter_speed(Vwind_initial, Vwind_final, tol, ap, strain_eq, betaeq, keq, throttle, deltaflap);
-   
+           flutter_speed(Vwind_initial, Vwind_final, tol, ap, strain_eq, altitude)
+   throttle = 0; deltaflap = 0;
+   betaeq = zeros(6,1);
+   keq = [0;0;0;altitude];
     [~, Aaeroelast, ~] = linearize(ap, strain_eq, betaeq, keq, throttle, deltaflap, Vwind_initial);
    if max(real(eig(Aaeroelast)))>0
        fprintf('Initial speed is already unstable! \n Cant find instability speed in this interval ');
