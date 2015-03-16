@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      AeroFlex - Example 2  - Aeroelasticity                         %
 % - finds equilibrium (aerodynamics + gravity)                        %
 % - linearizes to verify local stability                              %
@@ -53,29 +53,31 @@ function example2
     %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION %%%%%%%%%%%%%%
     % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
     altitude = 19931.7; % meters
-    V = 0;           % m/s
+    V = 0;           % rigid body speed m/s
     throttle = 0;
     deltaflap = 0;
-    Vwind = 10;
+    Vwind = 10; % wind speed
     %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
     [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);        
-    betaeq = [0 0 0 0 0 0]';
-    keq = [0 0 0 altitude]';    
-    [flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq, betaeq, keq, throttle, deltaflap);
+    
+    figure('color','w');
+    % plot structure without deformation:
+    update(ap,strain_eq*0,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
+    plotairplane3d(ap); 
+    % plot deformed structure (equilibrium condition):
+    update(ap,strain_eq,zeros(size(strain_eq)),zeros(size(strain_eq)),zeros(sum(ap.membNAEDtotal),1));
+    plotairplane3d(ap); 
+    view(30,45); axis equal; colormap winter;
 
+    % flutter speed - undeformed (Linear)
+    [flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq*0, altitude);
     flut_speed
     flut_eig_val
-    pause;
-%     
-%     for Vwind = 15:1:35
-%         tic;
-%         [Alin, Aaeroelast, Abody] = linearize(ap, strain_eq, betaeq, keq, throttle, deltaflap, Vwind);
-%         toc;        
-%         fprintf('Linearização numérica:\n');  
-%         fprintf('\nAutovalores da aeroelasticidade com parte real maior que -10 (asa engastada):');
-%         autoaeroelast = eig(Aaeroelast);
-%         autoaeroelast(find(autoaeroelast>0))
-%     end
+    
+    % flutter speed - deformed (Nonlinear)
+    [flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq, altitude);
+    flut_speed
+    flut_eig_val
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
@@ -89,17 +91,20 @@ function example2
     aerodynamic_surface_pos = 0; % no aerodynamic surfaces!
     engine_position = 0;     % no engine!
     beta0 = [0; 0;0;0;0;0]; % rigid body speeds
-    k0 = [0;0;0;0];         % rigid body position/orientation
+    k0 = [0;0;0;20000];         % rigid body position/orientation
     strain0 = strain_eq*0;
+    Vwind = 27;
     % simulation:  
     tic;
     [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'implicit');
     toc;
     
-    dt = 0.1;
+    dt = 0.04;
     [ts, Xs] = changedatarate(tNL,strainNL,dt);
+    %ts = tNL;
+    %Xs = strainNL;
     tip_displacement = zeros(length(ts),1);
-    for i = 1:size(ts,1)
+    for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
         tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
     end
@@ -109,7 +114,7 @@ function example2
     grid on;
     
     figure('color','w');
-    airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
+    airplanemovie(ap, ts', Xs,dt,'simulation_unstable','gif'); colormap winter;
     
 
 end
@@ -148,7 +153,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     aeroparams.N = 4; %number of lag states (Peter's Unsteady model)
     aeroparams.a = 0.0; % position of aerodynamic center relative to elastic axis
                         % relative to elastic axis (in terms of semi-chord)
-    aeroparams.alpha0 = 0; % alpha_0 (in radians)
+    aeroparams.alpha0 = 0*pi/180; % alpha_0 (in radians)
     aeroparams.clalpha = 2*pi; % cl_alpha  lift coeff/rad
     aeroparams.cm0 = 0;        % cm_0      moment coeff
     aeroparams.cd0 = 0.02;     % cd_0

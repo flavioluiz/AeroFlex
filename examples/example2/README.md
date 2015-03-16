@@ -117,16 +117,110 @@ relevant that for each node (cl_alpha, alpha_0, cm_0, cd_0, etc.). In this examp
 wing is uniform. If you are working with a more complicated wing, you need all these parameters
 for each node.
 
-
 Now, the wing is defined! We can use several functions to study this system (like 'trimairplane'
 to find the equilibrium, 'linearize' to study the linear behavior, 'simulate', 'flutter_speed', etc.)
+
+The following code uses the function 'trimairplane' to compute the equilibrium condition.
+Now, it uses an altitude of 19931.7 meters (used to compute the air density), and a 
+wind speed of 10 m/s. The function output 'strain_eq' is a vector with the strain vector
+in equilibrium. 
+
+    %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION %%%%%%%%%%%%%%
+    % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
+    altitude = 19931.7; % meters
+    V = 0;           % rigid body speed m/s
+    throttle = 0;
+    deltaflap = 0;
+    Vwind = 10; % wind speed
+    %%%%%% LINEARIZATION OF EQUATIONS OF MOTION %%%%%%%%%%
+    [rb_eq, strain_eq] = trimairplane(ap,V,altitude,Vwind,throttle,deltaflap);        
+
+Since this wing has a symmetric airfoil and the elastic axis coincides with
+the gravity center, different airspeeds leads to the same equilibrium. The following figure
+shows the equilibrium condition (exactly the same as the one from example 1).
+
+![Equilibrium](equilibrium1.jpg)
+
+For curiosity, we can change the airfoil value of alpha_0 (angle of zero lift), and see how 
+it is going to affect the equilibrium position. Here, we've changed it to -5 degrees. The following
+figure shows the equilibrium position for a wind speed of 10 m/s:
+
+![Equilibrium](equilibrium2_10ms.jpg)
+
+And the following figure uses the same airfoil, but with a speed of 20 m/s:
+
+![Equilibrium](equilibrium2_20ms.jpg)
 
 Linear aeroelasticity
 ----------
 
-32.56 m/s | 22.55 rad/s
+The method 'linearize', from 'airplane' class, is used to numerically linearize the
+equations of motion, allowing to verify local stability. For example:
+
+   throttle = 0; deltaflap = 0;
+   betaeq = zeros(6,1);
+   keq = [0;0;0;altitude];
+    [~, Aaeroelast, ~] = linearize(ap, strain_eq, betaeq, keq, throttle, deltaflap, Vwind_initial);
+	
+The previous code computes the state (A) matrix, for the aeroelastic system, given the
+equilibrium and flight conditions. By analysing the eigenvalues of A, one can check
+the system stability and dynamic characteristics. A simple way to find the instability
+speed is to gradually increase the speed and look for an eigenvalue of A with positive
+real part.
+
+The function 'flutter_speed' can also be used to find instability the minimum instability
+speed. The user should give an interval, and the function makes a binary search to
+find the instability taking into account a tolerance also specified by the user:
+
+	[flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq*0, altitude);
+
+In the previous line, the program looks for the minimum instability speed in the interval
+from 20 to 35 m/s, with a tolerance of 0.01 m/s. The strain vector is null, meaning
+that linearization is done relative to the undeformed condition. This leads to the classical
+linear aeroelasticity results. The function outputs are: flutter speed, eigenvalue of unstable
+mode and eigenvector of unstable mode.
+
+The following results are obtained and compared against Patil (1999).
+
+Ref.        |  Flutter speed | Flutter frequency
+---------- |-------------  |  -----------------
+AeroFlex | 32.56 m/s | 22.55 rad/s
+Patil  (1999)  | 32.2 m/s   |  22.6 rad/s
+
 
 Nonlinear aeroelasticity
 ---------
 
-24.03 m/s | 12.17 rad/s
+The interesting thing is that for this wing the (local) stability characteristics strongly
+depends on the equilibrium deformation of the wing. The large structural displacements
+change the mass distribution of the wing, and also change the aerodynamic loads directions.
+For this reason,  instability can occur at speeds very different from the results obtained
+if only a linear structural dynamics model is used.
+The following line computes the instability using the equilibrium condition:
+
+	[flut_speed, flut_eig_val, flut_eig_vec] = flutter_speed(20,35,0.01,ap, strain_eq*0, altitude);
+
+Ref.        |  Flutter speed | Flutter frequency
+---------- |-------------  |  -----------------
+AeroFlex     | 24.03 m/s  | 12.17 rad/s
+Patil  (1999)  | 23.4 m/s | 10.3 rad/s
+
+The flutter speed depends also on the angle of attack!! One way to verify it is 
+to change the airfoil angle of zero lift, and verify the flutter speed.
+
+
+Finally, as we did for the structural dynamics example, we can also perform
+simulations for this aeroelastic problem, using the 'simulate' method.
+
+Two cases are presented here. First, the time-response for a 10 m/s wind:
+
+![Simulation](simu.jpg)
+
+![Simulation](simulation.gif)
+
+Then, for a speed of 26 m/s (above the flutter speed):
+
+![Simulation](simu_unstable.jpg)
+
+![Simulation](simu_unstable.gif)
+
