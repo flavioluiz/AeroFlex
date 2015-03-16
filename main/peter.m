@@ -2,6 +2,7 @@ classdef peter
    
     properties
         n;                  % No. of degrees of freedom    [1,2,3 or 4]
+        m;                  % No. of 
         b;                  % Semi-cord length             [Units of lenght]
         N;                  % No. of aerodynamic inflow states 
         
@@ -11,7 +12,7 @@ classdef peter
         
         ndelta;             % No da superficie de controle que ativa o deltaflap
         
-        m;                  % No. of 
+
         
         alpha0;
         clalpha;
@@ -51,11 +52,11 @@ classdef peter
        
         function obj = peter(varargin)
             
-            obj.n = varargin{1};
-            obj.m = varargin{2};
-            obj.N = varargin{3};
-            obj.b = varargin{4};
-            obj.a = varargin{5};
+            obj.n = 2;
+            obj.m = 2;
+            obj.N = varargin{1};
+            obj.b = varargin{2};
+            obj.a = varargin{3};
             
 
             if nargin == 6

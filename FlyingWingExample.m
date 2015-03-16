@@ -205,12 +205,10 @@ function membro = geradorhighlyflex(n,lixo,amort, rigidez, rot, isRIGHT)
     mcs = 0.75;
     I11 = 0.1;
     
-    aeroparams.n = 2;
     c = 1;
     aeroparams.b = c/2;
     aeroparams.N = 0;
     aeroparams.a = 0;
-    aeroparams.m = 2;
     aeroparams.alpha0 = -5*pi/180*rightMTP;
     aeroparams.clalpha = 2*pi;
     aeroparams.cldelta = 0.01*rightMTP;

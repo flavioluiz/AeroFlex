@@ -143,11 +143,10 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     CG = damp_ratio*diag([K11 K22 K33 K44]);
     
     % aerodynamic data
-    aeroparams.n = 2; aeroparams.m = 2;
     c = 1;
-    aeroparams.b = c/2;
-    aeroparams.N = 4;
-    aeroparams.a = 0.;
+    aeroparams.b = c/2; %semi-chord
+    aeroparams.N = 4; %number of lag states (Peter's Unsteady model)
+    aeroparams.a = 0.0; % position of elastic axis 
 
     aeroparams.alpha0 = -5*pi/180*0;
     aeroparams.clalpha = 2*pi;

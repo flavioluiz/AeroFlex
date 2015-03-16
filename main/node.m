@@ -29,14 +29,12 @@ classdef node < handle
             if isempty(petersinp)
                 nd.aero = [];
             else
-                n = petersinp.n;
-                m = petersinp.m;
                 N = petersinp.N;
                 b = petersinp.b;
                 a = petersinp.a;
                 nd.geometry.a = a;
                 nd.geometry.b = b;
-                nd.aero = peter(n,m,N,b,a);
+                nd.aero = peter(N,b,a);
                 nd.aero.alpha0 = petersinp.alpha0;
                 nd.aero.clalpha = petersinp.clalpha;
                 nd.aero.cldelta = petersinp.cldelta; 
