@@ -143,21 +143,21 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     CG = damp_ratio*diag([K11 K22 K33 K44]);
     
     % aerodynamic data
-    c = 1;
+    c = 1; % chord
     aeroparams.b = c/2; %semi-chord
     aeroparams.N = 4; %number of lag states (Peter's Unsteady model)
-    aeroparams.a = 0.0; % position of elastic axis 
-
-    aeroparams.alpha0 = -5*pi/180*0;
-    aeroparams.clalpha = 2*pi;
-    aeroparams.cm0 = 0;
-    aeroparams.cd0 = 0.02;
+    aeroparams.a = 0.0; % position of aerodynamic center relative to elastic axis
+                        % relative to elastic axis (in terms of semi-chord)
+    aeroparams.alpha0 = 0; % alpha_0 (in radians)
+    aeroparams.clalpha = 2*pi; % cl_alpha  lift coeff/rad
+    aeroparams.cm0 = 0;        % cm_0      moment coeff
+    aeroparams.cd0 = 0.02;     % cd_0
     
-    aeroparams.cldelta = 0.01*0;
-    aeroparams.cmdelta = -0.1*0;
-    aeroparams.ndelta = 0; %numero da superficie de controle ativada
-    
-    
+    % aerodynamic data for flap/aileron, if exists
+    aeroparams.ndelta = 0;   % Identification of the flap (1,2,3,...)
+    aeroparams.cldelta = 0;  % cl_delta
+    aeroparams.cmdelta = 0;  % cm_delta
+            
     % cg position, mass and inertia data
     
     pos_cg = [0 0 0]; % position of section gravity center
