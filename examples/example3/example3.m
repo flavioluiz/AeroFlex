@@ -43,7 +43,7 @@ function example3
     
     %%%%%%%%%%%% STRUCTURE INITIALIZATION %%%%%%%%%%%%%%%%%
     numele = 1; %number of elements
-    damping = 0.0001; %damping coefficient (damping proportional to rigidity matrix)
+    damping = 0.04; %damping coefficient (damping proportional to rigidity matrix)
     ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
@@ -77,15 +77,15 @@ function example3
     % Initial conditions
 
     tSIM = input('Simulation time: (seconds)');    
-    aerodynamic_surface_pos = 0.001; % no aerodynamic surfaces!
+    aerodynamic_surface_pos = 1; % no aerodynamic surfaces!
     engine_position = 0;     % no engine!
-    beta0 = [0; 0;0;0;0;0]; % rigid body speeds
+    beta0 = [0; 10;0;0;0;0]; % rigid body speeds
     k0 = [0;0;0;20000];         % rigid body position/orientation
     strain0 = strain_eq;
     Vwind = 10;
     % simulation:  
     tic;
-    [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'implicit');
+    [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, @(t)aerodynamic_surface_pos, 'explicit');
     toc;
     
     dt = 0.04;
@@ -131,7 +131,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     K22 = 1e4; %GJ
     K33 = 2e4; %flat bend: EI
     K44 = 4e6; %chord bend: EI
-    KG = diag([K11 K22 K33 K44]);
+    KG = 100*diag([K11 K22 K33 K44]);
     
     % sectional damping matrix
     CG = damp_ratio*diag([K11 K22 K33 K44]);
@@ -140,7 +140,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     c = 1; % chord
     aeroparams.b = c/2; %semi-chord
     aeroparams.N = 4; %number of lag states (Peter's Unsteady model)
-    aeroparams.a = 0.0; % position of aerodynamic center relative to elastic axis
+    aeroparams.a = 0.5; % position of aerodynamic center relative to elastic axis
                         % relative to elastic axis (in terms of semi-chord)
     aeroparams.alpha0 = 0*pi/180; % alpha_0 (in radians)
     aeroparams.clalpha = 2*pi; % cl_alpha  lift coeff/rad
@@ -150,7 +150,7 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     % aerodynamic data for flap/aileron, if exists
     aeroparams.ndelta = 1;   % Identification of the flap (1,2,3,...)
     aeroparams.cldelta = 0.01;  % cl_delta
-    aeroparams.cmdelta = -0.1*0;  % cm_delta
+    aeroparams.cmdelta = -0.1;  % cm_delta
             
     % cg position, mass and inertia data
     
