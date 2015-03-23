@@ -1,19 +1,22 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%      AeroFlex Beta Ver1 - Example - FlyingWing Airplane        %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      AeroFlex - Example 3  - Aileron Reversals                      %
+% - include aerodynamic control surfaces                              %
+% - perform simulations to verify airleron reversals phenomenon       %
+% - one rigid body degree of freedom (rotations only)                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %
 %
 %
 %
 
-function example3
+function example3_ver
     clc
     clear all
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % AeroFlex Main Folder:                              %
-    mainFolder = strcat(pwd,'\main');
-    addpath(genpath(mainFolder));    
+    addpath('..\..\main');    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     
@@ -109,7 +112,7 @@ function example3
     %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%
     T=[0.00 0.1 0.11 4.00 4.01 5 1.00 100];
     elev=[0 0 1 1 -1 -1 0 0];
-    doublet = @(t) (deltaflap+interp1(T,elev,t));
+    doublet = @(t) [interp1(T,elev,t)];
     strain0 = Xeq;
     betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
     keq = [theta;0;0;altitude];
@@ -132,11 +135,10 @@ function example3
     
     dt = 0.05;
     [ts Xs] = changedatarate(tNL,xNL,dt);
-    for i = 1:size(ts,1)
+    for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
         desloctip(i) = ap.membros{1}(numele).node3.h(3);
     end
-    save('results\flyingwingdoubletinput.mat','tNL','xNL','betaNL','kineticNL','ts','desloctip','betaeq','keq');
     figure('name','Wing tip displacement');
     plot(ts,desloctip); xlabel('Time (s)'); ylabel('Tip displacement (m)');
     
@@ -148,12 +150,7 @@ function example3
         end
         airplanemovie(ap, ts, Xs,dt);
     end
-    simulaRIGID = input('\nDigite 1 para apresentar resultados de simulação da aeronave rigida:');
 
-    if simulaRIGID
-        dinamicarigida(V,altitude,longfig, tSIM, deltav, deltaw, deltaalfa,@(t)0, @(t)interp1(T,elev,t));
-    end
-        
 end
 
 function ap = carregaasavoadora(numele, amort, rigidez)
@@ -206,12 +203,19 @@ function membro = geradorhighlyflex(n,lixo,amort, rigidez, rot, isRIGHT)
     aeroparams.b = c/2;
     aeroparams.N = 0;
     aeroparams.a = 0;
-    aeroparams.alpha0 = -5*pi/180*rightMTP;
-    aeroparams.clalpha = 2*pi;
-    aeroparams.cldelta = 0.01;
+    aeroparams.alpha0 = -5*pi/180*rightMTP*0;
+    aeroparams.clalpha = 2*pi;        
+    
     aeroparams.cm0 = 0;
-    aeroparams.cmdelta = -0.1;
     aeroparams.ndelta = 1; %numero da superficie de controle ativada
+    if isRIGHT
+        aeroparams.cldelta = 0.01;
+        aeroparams.cmdelta = -0.1;
+    else
+        
+        aeroparams.cldelta = -0.01;
+        aeroparams.cmdelta = 0.1;
+    end
     aeroparams.cd0 = 0.02;
 
     ycg = 0.3;
@@ -233,8 +237,4 @@ function membro = geradorhighlyflex(n,lixo,amort, rigidez, rot, isRIGHT)
         membro(i).setstrain([0 0 0 0],[0 0 0 0]);
     end
     membro(1).node1.aero.setmembermatrices(membro);
-end
-
-function xp = dinamicalinearnumerica(t,x,A)
-    xp = A*x;
 end
