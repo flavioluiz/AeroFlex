@@ -46,9 +46,9 @@ function example3_ver
 
     
     %%%%%%%%%%%% AIRPLANE INITIALIZATION %%%%%%%%%%%%%%%%%
-    numele = 3; %number of elements
+    numele = 1; %number of elements
     amort = 0.04; %damping coefficient (eg.: 0.0001)
-    rigidez = 1; %multiplier for the rigidity matrix (eg.: 1)
+    rigidez = 1000; %multiplier for the rigidity matrix (eg.: 1)
     ap = carregaasavoadora(numele,amort,rigidez); % this creates a flexible
                                         %airplane object with numele elements
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -110,8 +110,8 @@ function example3_ver
     manete = vecequilibrio(3);
     
     %%%%%%%%%% Nonlinear implicit simulation %%%%%%%%%%%%%
-    T=[0.00 0.1 0.11 4.00 4.01 5 1.00 100];
-    elev=[0 0 1 1 -1 -1 0 0];
+    T=[0.00 0.1 0.11 4.00 4.01 5 10.0 100];
+    elev=[0 0 1 1 1 1 1 1];
     doublet = @(t) [interp1(T,elev,t)];
     strain0 = Xeq;
     betaeq = [0;V*cos(theta);-V*sin(theta);0;0;0];
@@ -148,7 +148,7 @@ function example3_ver
         for i = 1:size(ts,1)
             Xs(i,:) =  Xs(i,:) + Xeq(1:ap.NUMele*4);
         end
-        airplanemovie(ap, ts, Xs,dt);
+        airplanemovie(ap, ts', Xs,dt, 'test', 'gif');
     end
 
 end
@@ -210,11 +210,11 @@ function membro = geradorhighlyflex(n,lixo,amort, rigidez, rot, isRIGHT)
     aeroparams.ndelta = 1; %numero da superficie de controle ativada
     if isRIGHT
         aeroparams.cldelta = 0.01;
-        aeroparams.cmdelta = -0.1;
+        aeroparams.cmdelta = -0.1*0;
     else
         
-        aeroparams.cldelta = -0.01;
-        aeroparams.cmdelta = 0.1;
+        aeroparams.cldelta = 0.01;
+        aeroparams.cmdelta = -0.1*0;
     end
     aeroparams.cd0 = 0.02;
 
