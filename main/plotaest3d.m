@@ -3,7 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function plotaest3d(membro)
+function plotest = plotaest3d(membro)
     if isempty(membro(1).node3.geometry)
         fprintf('\n WARNING: Can`t plot structure without geometric data \n');
     else
@@ -39,7 +39,7 @@ function plotaest3d(membro)
             Z(i,3) = deflexao(3,i)+deflexao(9,i)*(b*a-b);              
         end
 
-        surf(X,Y,Z);
+        plotest = surf(X,Y,Z);
         hold on; %plot3(X,Y,Z,'o');
         axis([-20 20 -20 20]);
     end

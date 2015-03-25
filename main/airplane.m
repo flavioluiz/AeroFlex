@@ -113,10 +113,10 @@ classdef airplane < handle
                 ap.Jthetab = Jthetab;
             end
         end
-        function plotairplane3d(ap)
+        function ploti = plotairplane3d(ap)
             hold on;
             for i = 1:ap.NUMmembers
-                plotaest3d(ap.membros{i});
+                ploti(i) = plotaest3d(ap.membros{i});
             end
         end
         function update(ap,strain,strainp, strainpp, lambda)
@@ -135,14 +135,18 @@ classdef airplane < handle
                 update(ap.membros{i});
             end
         end
-        function airplanemovie(ap, t, strain,dt, filename, format)
+        function airplanemovie(ap, t, strain,kinetic_RB,dt, filename, format)
             if nargin < 5
                 aviobj = avifile(strcat(filename,'.avi'), 'fps', 1/dt);
                 h = figure;
                 for i = 1:size(t,1);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h,'reset');
-                    plotairplane3d(ap);
+                    plotid = plotairplane3d(ap); colormap winter;
+                    direction = [0,1,0];
+                    for i_member = 1:ap.NUMmembers
+                        rotate(plotid(i_member),direction,kinetic_RB(i,2)*180/pi);
+                    end
                     view(45,45);
                     axis([0 20 -10 10 -5 5]);
                     frame = getframe(h);
@@ -151,14 +155,19 @@ classdef airplane < handle
                 end
                 aviobj = close(aviobj);
             elseif format == 'gif'
-                h = figure;
+                h = figure(89);
                 for i = 1:size(t,1);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h);
-                    plotairplane3d(ap); colormap winter;
+                    plotid = plotairplane3d(ap); colormap winter;
+                    direction = [0,1,0];
+                    for i_member = 1:ap.NUMmembers
+                        rotate(plotid(i_member),direction,kinetic_RB(i,2)*180/pi);
+                    end
                     view(45,45);
-                    axis([0 20 -10 10 -5 5]);
-                    frame = getframe(1);
+                    axis([-20 20 -10 10 -5 5]);
+                    %axis equal;
+                    frame = getframe(89);
                     im = frame2im(frame);
                     [imind,cm] = rgb2ind(im,128); 
                     if i == 1;
