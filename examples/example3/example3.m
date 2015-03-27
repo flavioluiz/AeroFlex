@@ -51,7 +51,7 @@ function example3
         
         
     %%%%%%%%%%%% FINDS EQUILIBRIUM CONDITION %%%%%%%%%%%%%%
-    % FLIGHT CONDITIONS -- won't affect the results if there is no aerodynamics
+    % FLIGHT CONDITIONS
     altitude = 19931.7; % meters
     V = 0;           % rigid body speed m/s
     throttle = 0;
@@ -84,8 +84,6 @@ function example3
     dt = 0.1;
     [ts, Xs] = changedatarate(tNL,strainNL,dt);
     [ts, kinetics] = changedatarate(tNL,kineticNL,dt);
-    %ts = tNL;
-    %Xs = strainNL;
     tip_displacement = zeros(length(ts),1);
     for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
@@ -116,9 +114,7 @@ function ap = load_structure(numele, damp_ratio)
     ap = airplane({right_wing, left_wing}, fus, [motor1]);
 end
 
-function [right_wing, left_wing] = create_flexible_member(num_elements,damp_ratio)
-    
-
+function [right_wing, left_wing] = create_flexible_member(num_elements,damp_ratio)   
     % beam length
     Length = 16;
     

@@ -35,7 +35,7 @@ The only difference above is that now we chose the Peters aerodynamic model. Thi
 the best aerodynamic model implemented in AeroFlex, taking into account unsteady effect of aerodynamics.
 (it is also considerably slower, since it adds new dynamic states relative to each structural node).
 
-The, the airplane object is initialized by calling the function 'load_structure':
+Then, the airplane object is initialized by calling the function 'load_structure':
 
     numele = 3; %number of elements
     damping = 0.0001; %damping coefficient (damping proportional to rigidity matrix)
