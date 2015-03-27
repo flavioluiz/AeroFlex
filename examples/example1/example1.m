@@ -164,11 +164,16 @@ function flexible_member = create_flexible_member(num_elements,damp_ratio)
     mcs = 0.75; %mass per unit length (kg/m)
     Inertia = diag([I11 I22 I33]);
     
+    % rotation of initial node with respect to body frame (allow
+    % creating uniform beams with a twist, dihedral or sweep angle)
+    rot0.dihedral = 0; %angles in RADIANS
+    rot0.sweep = 0;
+    rot0.twist = 0;
     % the following function creates a uniform structure automatically; if
     % you need a more complicate wing (with non-uniform parameters, check
     % how the following function creates the structure. you should modify
     % this function to define the correct parameters for each structural
     % node)
-    flexible_member = create_uniform_structure(pos_cg, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);    
+    flexible_member = create_uniform_structure(pos_cg,rot0, Length, Inertia, mcs, KG, CG, aeroparams, geometry, num_elements);    
     
 end
