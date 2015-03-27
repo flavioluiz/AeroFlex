@@ -31,8 +31,10 @@ and compared againt linear case;
 
 Example 3 - Aileron reversals study
 ----
-TO DO
 
+You can check this example [here](./example3/README.md).
+
+* including a second (semi) wing;
 * how to include aerodynamic control surfaces to the airplane object;
 * simulations to show how aileron reversals can appear when using flexible airplane (compare with K = very large)
 
@@ -40,7 +42,7 @@ Example 4 - Flight dynamics of flexible flying wing
 ----
 TO DO
 
-* include rigid body degrees of freedom;
+* include full rigid body degrees of freedom;
 * find flight conditions equilibrium;
 * find instability speed;
 * simulation of a flight condition  and compare against rigid body motion;
