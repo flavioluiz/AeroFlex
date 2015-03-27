@@ -136,10 +136,11 @@ classdef airplane < handle
             end
         end
         function airplanemovie(ap, t, strain,kinetic_RB,dt, filename, format)
+            
             if nargin < 5
                 aviobj = avifile(strcat(filename,'.avi'), 'fps', 1/dt);
                 h = figure;
-                for i = 1:size(t,1);
+                for i = 1:length(t);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h,'reset');
                     plotid = plotairplane3d(ap); colormap winter;
@@ -156,13 +157,17 @@ classdef airplane < handle
                 aviobj = close(aviobj);
             elseif format == 'gif'
                 h = figure(89);
-                for i = 1:size(t,1);
+                for i = 1:length(t);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h);
                     plotid = plotairplane3d(ap); colormap winter;
-                    direction = [0,1,0];
-                    for i_member = 1:ap.NUMmembers
-                        rotate(plotid(i_member),direction,kinetic_RB(i,2)*180/pi);
+                    directionx = [1,0,0];
+                    directiony = [0,1,0];
+                    if ~isempty(kinetic_RB)
+                        for i_member = 1:ap.NUMmembers
+                            rotate(plotid(i_member),directionx,kinetic_RB(i,1)*180/pi);
+                            rotate(plotid(i_member),directiony,kinetic_RB(i,2)*180/pi);
+                        end
                     end
                     view(45,45);
                     axis([-20 20 -10 10 -5 5]);

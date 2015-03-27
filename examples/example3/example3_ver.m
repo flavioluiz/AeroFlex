@@ -48,7 +48,7 @@ function example3_ver
     %%%%%%%%%%%% AIRPLANE INITIALIZATION %%%%%%%%%%%%%%%%%
     numele = 3; %number of elements
     amort = 0.04; %damping coefficient (eg.: 0.0001)
-    rigidez = 1000; %multiplier for the rigidity matrix (eg.: 1)
+    rigidez = 1; %multiplier for the rigidity matrix (eg.: 1)
     ap = carregaasavoadora(numele,amort,rigidez); % this creates a flexible
                                         %airplane object with numele elements
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,13 +142,13 @@ function example3_ver
     figure('name','Wing tip displacement');
     plot(ts,desloctip); xlabel('Time (s)'); ylabel('Tip displacement (m)');
     
-        dt = 0.03;
+        dt = 0.1;
         [ts Xs] = changedatarate(tNL,xNL,dt);
         [ts kinetics] = changedatarate(tNL,kineticNL,dt);
         for i = 1:size(ts,1)
             Xs(i,:) =  Xs(i,:) + Xeq(1:ap.NUMele*4);
         end
-        airplanemovie(ap, ts', Xs, kinetics, dt, 'test', 'gif');
+        airplanemovie(ap, ts', Xs, kinetics, dt, 'flexible2', 'gif');
 
 
 end

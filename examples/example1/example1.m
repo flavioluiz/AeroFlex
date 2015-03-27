@@ -118,7 +118,7 @@ function example1
     grid on;
     
     figure('color','w');
-    airplanemovie(ap, ts, Xs,dt,'test','gif'); colormap winter;
+    airplanemovie(ap, ts, Xs,[],dt,'test','gif'); colormap winter;
     
 
 end
