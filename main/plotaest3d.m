@@ -3,7 +3,10 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function plotest = plotaest3d(membro)
+function plotest = plotaest3d(membro, translate)
+    if nargin < 2
+        translate = [0,0,0];
+    end
     if isempty(membro(1).node3.geometry)
         fprintf('\n WARNING: Can`t plot structure without geometric data \n');
     else
@@ -26,17 +29,17 @@ function plotest = plotaest3d(membro)
                     a = membro(floor((i-1)/3)+1).node2.geometry.a;
                     b = membro(floor((i-1)/3)+1).node2.geometry.b;
             end
-            X(i,1) = deflexao(1,i);% + deflexao(7,i);     
-            X(i,2) = deflexao(1,i);
-            X(i,3) = deflexao(1,i);
+            X(i,1) = deflexao(1,i)+translate(1);% + deflexao(7,i);     
+            X(i,2) = deflexao(1,i)+translate(1);
+            X(i,3) = deflexao(1,i)+translate(1);
 
-            Y(i,1) = deflexao(2,i) + deflexao(8,i)*(b*a+b);
-            Y(i,2) = deflexao(2,i);
-            Y(i,3) = deflexao(2,i)+deflexao(8,i)*(b*a-b);
+            Y(i,1) = deflexao(2,i) + deflexao(8,i)*(b*a+b)+translate(2);
+            Y(i,2) = deflexao(2,i) + translate(2);
+            Y(i,3) = deflexao(2,i)+deflexao(8,i)*(b*a-b) + translate(2);
 
-            Z(i,1) = deflexao(3,i) + deflexao(9,i)*(b*a+b);        
-            Z(i,2) = deflexao(3,i);              
-            Z(i,3) = deflexao(3,i)+deflexao(9,i)*(b*a-b);              
+            Z(i,1) = deflexao(3,i) + deflexao(9,i)*(b*a+b) +translate(3);        
+            Z(i,2) = deflexao(3,i) + translate(3);              
+            Z(i,3) = deflexao(3,i)+deflexao(9,i)*(b*a-b)+ translate(3); 
         end
 
         plotest = surf(X,Y,Z);

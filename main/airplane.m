@@ -113,10 +113,13 @@ classdef airplane < handle
                 ap.Jthetab = Jthetab;
             end
         end
-        function ploti = plotairplane3d(ap)
+        function ploti = plotairplane3d(ap,translate)
+            if nargin < 2
+                translate = [0,0,0];
+            end
             hold on;
             for i = 1:ap.NUMmembers
-                ploti(i) = plotaest3d(ap.membros{i});
+                ploti(i) = plotaest3d(ap.membros{i},translate);
             end
         end
         function update(ap,strain,strainp, strainpp, lambda)
@@ -160,7 +163,8 @@ classdef airplane < handle
                 for i = 1:length(t);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h);
-                    plotid = plotairplane3d(ap); colormap winter;
+                    translate = [0,0,kinetic_RB(i,4)-kinetic_RB(1,4)];
+                    plotid = plotairplane3d(ap,translate); colormap winter;
                     directionx = [1,0,0];
                     directiony = [0,1,0];
                     if ~isempty(kinetic_RB)
