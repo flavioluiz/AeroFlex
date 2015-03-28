@@ -30,7 +30,7 @@ function dinamicarigida(V,H,longfig,tSIM, deltav, deltaw, deltaalfa,tracaot,delt
     for i = 1:size(x,1)
         dx(i,:) = x(i,:) - equilibrio;
     end
-    save('results\doubletrigida.mat','t','x','equilibrio','tracaoeq', 'deltapeq');
+%    save('results\doubletrigida.mat','t','x','equilibrio','tracaoeq', 'deltapeq');
     figure(longfig);
     subplot(3,2,3); plot(t,dx(:,1)); legend('Flexivel', 'Rigido');%velocidade eixo y
     subplot(3,2,4); plot(t,dx(:,2)); legend('Flexivel', 'Rigido');%velocidade eixo z
