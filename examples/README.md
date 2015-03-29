@@ -38,14 +38,25 @@ You can check this example [here](./example3/README.md).
 * how to include aerodynamic control surfaces to the airplane object;
 * simulations to show how aileron reversals can appear when using flexible airplane (compare with K = very large)
 
+![Simulation - aileron reversals](./example3/flexible.gif)
+
 Example 4 - Flight dynamics of flexible flying wing
 ----
-TO DO
+
+You can check this example [here](./example4/README.md).
 
 * include full rigid body degrees of freedom;
 * find flight conditions equilibrium;
-* find instability speed;
 * simulation of a flight condition  and compare against rigid body motion;
 
+![Simulation of flexible airplane](./example4/flexible.gif)
+
+
+Example 5 - Stability of flexible flying wing
+---
+
+TO DO
+
+* find instability speed of previous example;
 
 

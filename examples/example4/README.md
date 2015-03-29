@@ -230,7 +230,7 @@ classical rigid body flight dynamics.
 
 and for the almost rigid airplane:
 
-![Simulation results - highly flexible](./sim_flexible.jpg)
+![Simulation results - highly flexible](./sim_rigid.jpg)
 
 Notice that for the "almost flexible" airplane (rigidity matrix multiplied by 1000), the simulation
 almost coincides with the rigid body simulation.
