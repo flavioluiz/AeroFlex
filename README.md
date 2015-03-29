@@ -13,27 +13,21 @@ a quasi-steady, quasi-steady with apparent mass and full unsteady aerodynamics r
 
 Several applications can be studied using this tool:
 
-- Simulation and stability analysis of classic wing aeroelastic phenomena like: divergence, flutter, aileron reversals;
+- Simulation and stability analysis of classic wing aeroelastic phenomena like: divergence, [flutter](.\examples\example2\README.md), [control reversals](.\examples\example3\README.md);
 
-- Simulation and stability analysis of nonlinear wing aeroelastic phenomena, due to nonlinear geometry deflections;
+- Simulation and [stability analysis](.\examples\example2\README.md) of nonlinear wing aeroelastic phenomena, due to nonlinear geometry deflections;
 
-- Simulation and stability analysis of a flexible aircraft in free-flight condition.
+- [Simulation](.\examples\example4\README.md) and stability analysis of a flexible aircraft in free-flight condition.
 
 ## Usage and examples
 
 My goal is to include several examples and tutorials of use of this tool, with the hope that it can be
 used by other people. I am still working on it. You can check some of them [here](./examples/README.md).
 
-While these examples and tutorials are not ready, you can check
-the sample file `./FlyingWingExample.m`. This file initializes an airplane, finds its equilibrium position, 
-for a given flight speed/altitude,  linearizes the dynamics to verify stability and perform 
-non-linear flight dynamics simulation.
-
 All main files are in the `./main/` folder. These files are used to perform all the tasks: from
 defining each component of the airplane (wings, engines, rigid units attached to the body)
 to perform simulations. You can have a better idea of how AeroFlex work by reading 
 [this paper](http://flavioluiz.github.io/papers/AeroFlexCONEM.pdf).
-
 
 
 ## Research using AeroFlex
