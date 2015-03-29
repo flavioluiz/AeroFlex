@@ -28,14 +28,14 @@ function dinamicarigida(V,H,longfig,tSIM, deltav, deltaw, deltaalfa,tracaot,delt
     Alpha = -atan(x(:,2)./x(:,1));
     Veloc = sqrt(x(:,1).^2+x(:,2).^2);
     for i = 1:size(x,1)
-        dx(i,:) = x(i,:) - equilibrio;
+        dx(i,:) = x(i,:);
     end
 %    save('results\doubletrigida.mat','t','x','equilibrio','tracaoeq', 'deltapeq');
     figure(longfig);
-    subplot(3,2,3); plot(t,dx(:,1)); legend('Flexivel', 'Rigido');%velocidade eixo y
-    subplot(3,2,4); plot(t,dx(:,2)); legend('Flexivel', 'Rigido');%velocidade eixo z
-    subplot(3,2,5); plot(t,dx(:,3)); legend('Flexivel', 'Rigido');%q
-    subplot(3,2,6); plot(t,dx(:,5)); legend('Flexivel', 'Rigido'); %H
+    subplot(2,2,1); plot(t,dx(:,1)); %velocidade eixo y
+    subplot(2,2,2); plot(t,dx(:,2)); %velocidade eixo z
+    subplot(2,2,3); plot(t,dx(:,3)); %q
+    subplot(2,2,4); plot(t,dx(:,5)); legend('Flexible', 'Rigid'); %H
     
     %plot(t,[dx (Alpha-alpha) Veloc-V]); legend('u','w','q','theta', 'H','alpha','V');
     

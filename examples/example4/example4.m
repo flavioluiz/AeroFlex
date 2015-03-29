@@ -74,9 +74,7 @@ function example4
     strain0 = strain_eq;
     Vwind = 0;
     % simulation:  
-    tic;
     [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, aerodynamic_surface_pos, 'implicit');
-    toc;
     
     dt = 0.1;
     [ts, Xs] = changedatarate(tNL,strainNL,dt);
@@ -90,15 +88,12 @@ function example4
     plot(ts,tip_displacement);
     xlabel('Time (s)'); ylabel('Tip displacement (m)');
     grid on;
-    
-    
-    
-    
-    longfig = figure;
-    subplot(3,2,3); plot(tNL,betaNL(:,2)-V*cos(theta),'r'); xlabel('t'); ylabel('beta(2)'); hold all;%velocidade eixo y
-    subplot(3,2,4); plot(tNL,betaNL(:,3)+V*sin(theta),'r'); xlabel('t'); ylabel('beta(3)'); hold all;%velocidade eixo z
-    subplot(3,2,5); plot(tNL,betaNL(:,4),'r'); xlabel('t'); ylabel('q');hold all;%q
-    subplot(3,2,6); plot(tNL,kineticNL(:,4),'r'); xlabel('t'); ylabel('H');hold all; %H
+        
+    longfig = figure('color','w');
+    subplot(2,2,1); plot(tNL,betaNL(:,2),'r'); xlabel('t'); ylabel('v (m/s)'); hold all;%velocidade eixo y
+    subplot(2,2,2); plot(tNL,betaNL(:,3),'r'); xlabel('t'); ylabel('w (m/s)'); hold all;%velocidade eixo z
+    subplot(2,2,3); plot(tNL,betaNL(:,4),'r'); xlabel('t'); ylabel('q (rad/s)');hold all;%q
+    subplot(2,2,4); plot(tNL,kineticNL(:,4),'r'); xlabel('t'); ylabel('Altitude (m)');hold all; %H
     deltaalfa = 0; deltau = 0; deltav = 0; deltaw = 0;
     dinamicarigida(V,altitude,longfig, tSIM, deltav, deltaw, deltaalfa,@(t)0, @(t)interp1(T,elev,t));
     
@@ -132,7 +127,7 @@ function [right_wing, left_wing] = create_flexible_member(num_elements,damp_rati
     K22 = 1e4; %GJ
     K33 = 2e4; %flat bend: EI
     K44 = 4e6; %chord bend: EI
-    KG = 0.5*diag([K11 K22 K33 K44]);
+    KG = diag([K11 K22 K33 K44]);
     
     % sectional damping matrix
     CG = damp_ratio*diag([K11 K22 K33 K44]);
