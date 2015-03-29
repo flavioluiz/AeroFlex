@@ -13,7 +13,7 @@ a quasi-steady, quasi-steady with apparent mass and full unsteady aerodynamics r
 
 Several applications can be studied using this tool:
 
-- Simulation and stability analysis of classic wing aeroelastic phenomena like: divergence, [flutter](./examples/example2/README.md), [control reversals](.\examples\example3\README.md);
+- Simulation and stability analysis of classic wing aeroelastic phenomena like: divergence, [flutter](./examples/example2/README.md), [control reversals](./examples/example3/README.md);
 
 - Simulation and [stability analysis](./examples/example2/README.md) of nonlinear wing aeroelastic phenomena, due to nonlinear geometry deflections;
 
