@@ -19,6 +19,10 @@ Several applications can be studied using this tool:
 
 - [Simulation](.\examples\example4\README.md) and stability analysis of a flexible aircraft in free-flight condition.
 
+![Unstable Aeroelasticity](./examples/example2/simulation_unstable.gif)
+
+![Simulation of flexible airplane](./examples/example4/flexible.gif)
+
 ## Usage and examples
 
 My goal is to include several examples and tutorials of use of this tool, with the hope that it can be
