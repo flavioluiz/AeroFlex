@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     Copyright (C) 2011- Flávio Luiz C. Ribeiro
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-classdef airplane < handle
+classdef Airplane < handle
     properties
         membros;
         fus;
@@ -27,7 +27,7 @@ classdef airplane < handle
         NUMaedstates;
     end
     methods
-        function ap = airplane(membros,fus, engines)
+        function ap = Airplane(membros,fus, engines)
             ap.NUMmembers = size(membros,2);
             ap.membros = membros;
             ap.NUMele = 0;

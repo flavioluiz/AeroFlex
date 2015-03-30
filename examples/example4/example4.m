@@ -115,7 +115,7 @@ function ap = load_structure(numele, damp_ratio)
     engparams.betaf = 0;
     motor1 = engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
 
-    ap = airplane({right_wing, left_wing}, fus, [motor1]);
+    ap = Airplane({right_wing, left_wing}, fus, [motor1]);
 end
 
 function [right_wing, left_wing] = create_flexible_member(num_elements,damp_ratio)   

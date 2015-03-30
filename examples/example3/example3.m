@@ -111,7 +111,7 @@ function ap = load_structure(numele, damp_ratio)
     update(left_wing); % initialize displacements for each member node
     fus = []; % no fuselage
     motor1 = []; % no engines
-    ap = airplane({right_wing, left_wing}, fus, [motor1]);
+    ap = Airplane({right_wing, left_wing}, fus, [motor1]);
 end
 
 function [right_wing, left_wing] = create_flexible_member(num_elements,damp_ratio)   
