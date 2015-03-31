@@ -3,7 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-classdef rigidfus < handle
+classdef RigidFuselage < handle
     properties
         m;
         pcm;
@@ -14,7 +14,7 @@ classdef rigidfus < handle
         N;
     end
     methods
-        function fus = rigidfus(m, pcm, inertia)
+        function fus = RigidFuselage(m, pcm, inertia)
           fus.m = m;
           fus.pcm = pcm;
           fus.I = inertia;
