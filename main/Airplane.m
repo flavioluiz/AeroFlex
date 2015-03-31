@@ -71,7 +71,7 @@ classdef Airplane < handle
             ap.B = B;
             
             if isempty(fus)
-                fus = rigidfus(0, [0 0 0], zeros(3,3));
+                fus = RigidFuselage(0, [0 0 0], zeros(3,3));
             end
             ap.fus = fus;
         end
