@@ -3,6 +3,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 classdef Element < handle
+% The Element class brings together all the information about the airplane
+% flexible structures.
+% Each element has the data about structural rigidity and damping;
+% In addition, each element is linked to three Node objects. The node
+% objects have the informations about distributed and concentrated masses,
+% as well as aerodynamic data.
+%
+%
+% Methods of this object computes the Structural jacobians as well as
+% structural displacements, from the strain vector.
+%
+
     properties
         memberJhep;
         memberJpep;

@@ -2,15 +2,32 @@
 %     Copyright (C) 2011- Flávio Luiz C. Ribeiro
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 classdef Airplane < handle
+% "Airplane" objects brings together all the airplane properties (including
+% each flexible member, engines and fuselage). It also includes all the
+% main methods to analyze the flight dynamics such as:
+% * update(...) (to update strain information about the airplane)
+% * updateStrJac (update structural Jacobians, with current strain formation)
+% * linearize: to study linear stability, modes, etc.
+% * trimairplane: to find (longitudinal) equilibrium position, including
+% flexible and rigid body degrees of freedom;
+% * trimairplanefull: to find latero+directional+longitudinal equilibrium
+% condition;
+% * simulate: to numerically integrate the equations of motion;
+% * platairplane3D (to plot airplane with current strain information);
+% * airplanemovie: makes a movie from a time vector + a strain matrix;
+
+
     properties
-        members;
-        fus;
-        prop; %motores
+        members; % array of flexible members:
+                 %    each member is a vector of Element objects
+        fus;     % RigidFuselage object (only one per Airplane)
+        prop;    % vector of Engine objects
         N;
-        B;
+        B;        
         Me;
         KG;
         CG;
+        % structural Jacobians:
         Jhep;
         Jpep;
         Jthetaep;
@@ -19,15 +36,22 @@ classdef Airplane < handle
         Jthetab;
         %Jhepp;
         Jhbp;
-        NUMele; % numero de elementos
-        NUMmembers; % numero de membros
-        membSIZES; % vetor com numero de elementos de cada membro
-        membNAED; % vetor com numero de estados de aerodinamica não-estacionaria utilizados em cada membro (numero por nó!!)
-        membNAEDtotal; % vetor com numero de elementos de AED N-EST totais para cada membro
-        NUMaedstates;
+        NUMele; % total number of elements
+        NUMmembers; % total number of flexible members
+        membSIZES; % vector with the number of elements of each member
+        membNAED; % number of unsteady aerodynamic states for each node
+        membNAEDtotal; % number of aerodynamic states for each member
+        NUMaedstates;  % total number of aerodynamic states
     end
     methods
         function ap = Airplane(members,fus, engines)
+            % Airplane object constructor:
+            %
+            % @param members Array of flexible member. Each member is a
+            % vector of Element objects;
+            % @param fus Fuselage information: it is an object of
+            % RigidFuselage class;
+            % @param engines Vector of Engine objects
             ap.NUMmembers = size(members,2);
             ap.members = members;
             ap.NUMele = 0;
