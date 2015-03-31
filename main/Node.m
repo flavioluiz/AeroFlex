@@ -34,7 +34,7 @@ classdef Node < handle
                 a = petersinp.a;
                 nd.geometry.a = a;
                 nd.geometry.b = b;
-                nd.aero = peter(N,b,a);
+                nd.aero = Peter(N,b,a);
                 nd.aero.alpha0 = petersinp.alpha0;
                 nd.aero.clalpha = petersinp.clalpha;
                 nd.aero.cldelta = petersinp.cldelta; 
