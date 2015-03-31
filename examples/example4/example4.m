@@ -67,11 +67,11 @@ function example4
 
     tSIM = input('Simulation time: (seconds)');    
     T=[0.00 0.49 0.50 1.99 2.00 3.49 3.5 100];
-    elev=[0 0 1 1 -1 -1 0 0]/5*0;
+    elev=[0 0 1 1 -1 -1 0 0]/5;
     aerodynamic_surface_pos = @(t) (deltaflap+interp1(T,elev,t));
     beta0 = [0; V*cos(theta);-V*sin(theta);0;0;0]; % rigid body speeds
     k0 = [theta;0;0;altitude];         % rigid body position/orientation
-    strain0 = strain_eq*0;
+    strain0 = strain_eq;
     Vwind = 0;
     % simulation:  
     [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, aerodynamic_surface_pos, 'implicit');
@@ -82,7 +82,7 @@ function example4
     tip_displacement = zeros(length(ts),1);
     for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
+        tip_displacement(i) = ap.members{1}(numele).node3.h(3);
     end
     figure('color','w','name','Wing tip displacement');
     plot(ts,tip_displacement);
@@ -127,7 +127,7 @@ function [right_wing, left_wing] = create_flexible_member(num_elements,damp_rati
     K22 = 1e4; %GJ
     K33 = 2e4; %flat bend: EI
     K44 = 4e6; %chord bend: EI
-    KG = 0.5*diag([K11 K22 K33 K44]);
+    KG = diag([K11 K22 K33 K44]);
     
     % sectional damping matrix
     CG = damp_ratio*diag([K11 K22 K33 K44]);

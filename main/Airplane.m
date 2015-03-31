@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 classdef Airplane < handle
     properties
-        membros;
+        members;
         fus;
         prop; %motores
         N;
@@ -27,16 +27,16 @@ classdef Airplane < handle
         NUMaedstates;
     end
     methods
-        function ap = Airplane(membros,fus, engines)
-            ap.NUMmembers = size(membros,2);
-            ap.membros = membros;
+        function ap = Airplane(members,fus, engines)
+            ap.NUMmembers = size(members,2);
+            ap.members = members;
             ap.NUMele = 0;
             ap.prop = engines;
 
-            for i=1:size(membros,2) 
-                ap.membSIZES(i) = size(ap.membros{i},2);
-                if ~isempty(ap.membros{i}(1).node1.aero)
-                    ap.membNAED(i) = ap.membros{i}(1).node1.aero.N;
+            for i=1:size(members,2) 
+                ap.membSIZES(i) = size(ap.members{i},2);
+                if ~isempty(ap.members{i}(1).node1.aero)
+                    ap.membNAED(i) = ap.members{i}(1).node1.aero.N;
                 else
                     ap.membNAED(i) = 0;
                 end
@@ -57,11 +57,11 @@ classdef Airplane < handle
             B = [];
 
             for i = 1:ap.NUMmembers
-                Me = mdiag(Me, getmemberMe(membros{i}));
-                KG = mdiag(KG, getmemberKG(membros{i}));
-                CG = mdiag(CG, getmemberCG(membros{i}));
-                N = [N; getmemberN(membros{i})];
-                B = mdiag(B, getB(membros{i}));
+                Me = mdiag(Me, getmemberMe(members{i}));
+                KG = mdiag(KG, getmemberKG(members{i}));
+                CG = mdiag(CG, getmemberCG(members{i}));
+                N = [N; getmemberN(members{i})];
+                B = mdiag(B, getB(members{i}));
             end
 
             ap.Me = Me;
@@ -84,24 +84,24 @@ classdef Airplane < handle
             Jthetab = [];
             
             for i = 1:ap.NUMmembers
-                ap.membros{i}(1).memberJhep = getmemberJhep(ap.membros{i});
-                Jhep = mdiag(Jhep, ap.membros{i}(1).memberJhep);
+                ap.members{i}(1).memberJhep = getmemberJhep(ap.members{i});
+                Jhep = mdiag(Jhep, ap.members{i}(1).memberJhep);
                 
-                ap.membros{i}(1).memberJpep = getJpep(ap.membros{i},ap.membros{i}(1).memberJhep);
-                Jpep = mdiag(Jpep,ap.membros{i}(1).memberJpep);
+                ap.members{i}(1).memberJpep = getJpep(ap.members{i},ap.members{i}(1).memberJhep);
+                Jpep = mdiag(Jpep,ap.members{i}(1).memberJpep);
                 
                 %if isempty(ap.Jthetaep)
-                    ap.membros{i}(1).memberJthetaep = getJthetaep(ap.membros{i},ap.membros{i}(1).memberJhep);
-                    Jthetaep = mdiag(Jthetaep, ap.membros{i}(1).memberJthetaep);
+                    ap.members{i}(1).memberJthetaep = getJthetaep(ap.members{i},ap.members{i}(1).memberJhep);
+                    Jthetaep = mdiag(Jthetaep, ap.members{i}(1).memberJthetaep);
 
-                    ap.membros{i}(1).memberJhb = getmemberJhb(ap.membros{i});
-                    Jhb = [Jhb; ap.membros{i}(1).memberJhb];
+                    ap.members{i}(1).memberJhb = getmemberJhb(ap.members{i});
+                    Jhb = [Jhb; ap.members{i}(1).memberJhb];
 
-                    ap.membros{i}(1).memberJpb = getmemberJpb(ap.membros{i},ap.membros{i}(1).memberJhb);
-                    Jpb = [Jpb; ap.membros{i}(1).memberJpb];
+                    ap.members{i}(1).memberJpb = getmemberJpb(ap.members{i},ap.members{i}(1).memberJhb);
+                    Jpb = [Jpb; ap.members{i}(1).memberJpb];
 
-                    ap.membros{i}(1).memberJthetab = getmemberJthetab(ap.membros{i});
-                    Jthetab = [Jthetab; ap.membros{i}(1).memberJthetab];
+                    ap.members{i}(1).memberJthetab = getmemberJthetab(ap.members{i});
+                    Jthetab = [Jthetab; ap.members{i}(1).memberJthetab];
                 %end
             end
             ap.Jhep = Jhep;
@@ -119,23 +119,23 @@ classdef Airplane < handle
             end
             hold on;
             for i = 1:ap.NUMmembers
-                ploti(i) = plotaest3d(ap.membros{i},translate);
+                ploti(i) = plotaest3d(ap.members{i},translate);
             end
         end
         function update(ap,strain,strainp, strainpp, lambda)
             for i = 1:ap.NUMmembers
-                ap.membros{i}(1).strainm = strain((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
-                ap.membros{i}(1).strainpm = strainp((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
-                ap.membros{i}(1).strainppm = strainpp((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
-                ap.membros{i}(1).lambdam = lambda((sum(ap.membNAEDtotal(1:(i-1))) + 1):(sum(ap.membNAEDtotal(1:i))))';
+                ap.members{i}(1).strainm = strain((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
+                ap.members{i}(1).strainpm = strainp((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
+                ap.members{i}(1).strainppm = strainpp((sum(ap.membSIZES(1:(i-1)))*4 + 1):(sum(ap.membSIZES(1:i))*4))';
+                ap.members{i}(1).lambdam = lambda((sum(ap.membNAEDtotal(1:(i-1))) + 1):(sum(ap.membNAEDtotal(1:i))))';
             end
             for i = 1:ap.NUMmembers
                 for j = 1:ap.membSIZES(i)
-                    ap.membros{i}(j).setstrain(ap.membros{i}(1).strainm((1+(j-1)*4):(4+(j-1)*4)),ap.membros{i}(1).strainpm((1+(j-1)*4):(4+(j-1)*4)));
+                    ap.members{i}(j).setstrain(ap.members{i}(1).strainm((1+(j-1)*4):(4+(j-1)*4)),ap.members{i}(1).strainpm((1+(j-1)*4):(4+(j-1)*4)));
                 end
             end
             for i = 1:ap.NUMmembers
-                update(ap.membros{i});
+                update(ap.members{i});
             end
         end
         function airplanemovie(ap, t, strain,kinetic_RB,dt, filename, format)

@@ -106,7 +106,7 @@ function example2
     tip_displacement = zeros(length(ts),1);
     for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
+        tip_displacement(i) = ap.members{1}(numele).node3.h(3);
     end
     figure('color','w','name','Wing tip displacement');
     plot(ts,tip_displacement);
