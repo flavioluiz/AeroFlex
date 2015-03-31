@@ -3,7 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-classdef engine < handle
+classdef Engine < handle
     properties
         numPI; %numero da manete que controla o motor
         numMEMB; %numero do membro onde está posicionado
@@ -13,7 +13,7 @@ classdef engine < handle
         NODEpos; %número do nó onde se encontra o elemento
     end
     methods
-        function prop = engine(numPI, pos, params)
+        function prop = Engine(numPI, pos, params)
             prop.numPI = numPI;
             prop.numMEMB = pos(1);
             prop.numELEM = pos(2);

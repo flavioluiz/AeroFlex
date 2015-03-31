@@ -139,7 +139,7 @@ function ap = load_structure(numele, damp_ratio)
     engparams.Fmax = 1; engparams.V0 = 1; engparams.rho0 = 1;
     engparams.nv= -1; engparams.nrho = 0; engparams.alphaf = 0;
     engparams.betaf = 0;
-    motor1 = engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
+    motor1 = Engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
 
     ap = Airplane({right_wing, left_wing}, fus, [motor1]);
 end

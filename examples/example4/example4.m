@@ -22,7 +22,7 @@ function example4
                                            % degree of freedom [u v w p q r]
     softPARAMS.isGRAV = 1; % include gravity?
     softPARAMS.g = 9.8; % gravity in m/s^2    
-    softPARAMS.isITER = 1; % iterative equilibrium determination?
+    softPARAMS.isITER = 0; % iterative equilibrium determination?
     softPARAMS.numITER = 10; % number of iterations for equilibrium determination
     softPARAMS.modAED = 1; % AERODYNAMIC MODEL: 
                                     %0-Steady;
@@ -40,7 +40,7 @@ function example4
     
     %%%%%%%%%%%% AIRPLANE INITIALIZATION %%%%%%%%%%%%%%%%%
     numele = 3; %number of elements
-    damping = 0.04; %damping coefficient (damping proportional to rigidity matrix)
+    damping = 0.0001; %damping coefficient (damping proportional to rigidity matrix)
     ap = load_structure(numele,damping); % this creates a flexible
                                         %airplane object with numele elements
                                         % check the function loadstruct
@@ -67,11 +67,11 @@ function example4
 
     tSIM = input('Simulation time: (seconds)');    
     T=[0.00 0.49 0.50 1.99 2.00 3.49 3.5 100];
-    elev=[0 0 1 1 -1 -1 0 0]/5;
+    elev=[0 0 1 1 -1 -1 0 0]/5*0;
     aerodynamic_surface_pos = @(t) (deltaflap+interp1(T,elev,t));
     beta0 = [0; V*cos(theta);-V*sin(theta);0;0;0]; % rigid body speeds
     k0 = [theta;0;0;altitude];         % rigid body position/orientation
-    strain0 = strain_eq;
+    strain0 = strain_eq*0;
     Vwind = 0;
     % simulation:  
     [tNL, strainNL, straindNL, lambdaNL, betaNL, kineticNL] = simulate(ap, [0 tSIM], strain0, beta0, k0, Vwind, @(t)engine_position, aerodynamic_surface_pos, 'implicit');
@@ -113,7 +113,7 @@ function ap = load_structure(numele, damp_ratio)
     engparams.Fmax = 1; engparams.V0 = 1; engparams.rho0 = 1;
     engparams.nv= -1; engparams.nrho = 0; engparams.alphaf = 0;
     engparams.betaf = 0;
-    motor1 = engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
+    motor1 = Engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
 
     ap = Airplane({right_wing, left_wing}, fus, [motor1]);
 end
@@ -127,7 +127,7 @@ function [right_wing, left_wing] = create_flexible_member(num_elements,damp_rati
     K22 = 1e4; %GJ
     K33 = 2e4; %flat bend: EI
     K44 = 4e6; %chord bend: EI
-    KG = diag([K11 K22 K33 K44]);
+    KG = 0.5*diag([K11 K22 K33 K44]);
     
     % sectional damping matrix
     CG = damp_ratio*diag([K11 K22 K33 K44]);
