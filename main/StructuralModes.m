@@ -1,13 +1,13 @@
 % this class finds the structural dynamic modes of the flexible airplane
 % (without taking into account rigid body degrees of freedom!)
-classdef structural_modes < handle
+classdef StructuralModes < handle
     properties
         frequencies;
         eigen_vectors;
         num_of_modes;
     end
     methods
-        function st_modes = structural_modes(airplane)
+        function st_modes = StructuralModes(airplane)
             ap = airplane;
 
             KFF = ap.KG;

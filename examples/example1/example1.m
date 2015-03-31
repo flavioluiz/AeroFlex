@@ -51,7 +51,7 @@ function example1
     
     %%%%%%%%%%%% MODAL ANALYSIS %%%%%%%%%%%%%%%%%%%%%%%%%%
     % find structural natural frequencies and modal shapes
-    st_modes = structural_modes(ap);
+    st_modes = StructuralModes(ap);
     numerical_freqs = st_modes.frequencies(1:6);
     exact_freqs = sort(exact(4,1,1));
     fprintf('Natural frequencies (in Hz):\n');
