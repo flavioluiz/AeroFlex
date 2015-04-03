@@ -25,6 +25,12 @@ Several applications can be studied using this tool:
 
 ## Usage and examples
 
+If you want to try AeroFlex, you can download the ZIP file with the last version
+[here](https://github.com/flavioluiz/AeroFlex/archive/master.zip). Then, play with
+the examples files in the '.\examples' folder.
+If you want to  *contribute*, I strongly suggest that you [fork](https://help.github.com/articles/fork-a-repo/)
+this repository and submit pull requests with your contributions.
+
 My goal is to include several examples and tutorials of use of this tool, with the hope that it can be
 used by other people. I am still working on it. You can check some of them [here](./examples/README.md).
 
