@@ -2,7 +2,19 @@
 %     Copyright (C) 2011- Flávio Luiz C. Ribeiro
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-classdef element < handle
+classdef Element < handle
+% The Element class brings together all the information about the airplane
+% flexible structures.
+% Each element has the data about structural rigidity and damping;
+% In addition, each element is linked to three Node objects. The node
+% objects have the informations about distributed and concentrated masses,
+% as well as aerodynamic data.
+%
+%
+% Methods of this object computes the Structural jacobians as well as
+% structural displacements, from the strain vector.
+%
+
     properties
         memberJhep;
         memberJpep;
@@ -36,7 +48,7 @@ classdef element < handle
         dexp2GdEps;
     end
     methods
-        function el = element(node1,node2,node3,rot,ds,KG, CG) %inicializa o elemento de viga, associando a 3 nohs
+        function el = Element(node1,node2,node3,rot,ds,KG, CG) %inicializa o elemento de viga, associando a 3 nohs
             M1 = node1.Mnode;
             M2 = node2.Mnode;
             M3 = node3.Mnode;

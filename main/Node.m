@@ -3,7 +3,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-classdef node < handle
+classdef Node < handle
     properties
         mcs; %massa por unidade de comprimento
         mcg; %posicao do CG da sescao (rx,ry,rz)
@@ -16,7 +16,7 @@ classdef node < handle
         geometry; % structure with two elements: b (semi-chord) and a
     end
     methods
-        function nd = node(mcs, mcg, Inertia,petersinp, rigid, s, geometry)  %inicializa o noh
+        function nd = Node(mcs, mcg, Inertia,petersinp, rigid, s, geometry)  %inicializa o noh
             if nargin > 6
                 nd.geometry = geometry;
             else 
@@ -34,7 +34,7 @@ classdef node < handle
                 a = petersinp.a;
                 nd.geometry.a = a;
                 nd.geometry.b = b;
-                nd.aero = peter(N,b,a);
+                nd.aero = Peter(N,b,a);
                 nd.aero.alpha0 = petersinp.alpha0;
                 nd.aero.clalpha = petersinp.clalpha;
                 nd.aero.cldelta = petersinp.cldelta; 

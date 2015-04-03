@@ -1,11 +1,15 @@
 # AeroFlex
-AeroFlex is a MATLAB toolbox for studying the flight dynamics of highly flexible airplanes.
+AeroFlex is an academic toolbox for studying the flight dynamics of highly flexible airplanes.
 
 Most part of development was done during [my master thesis](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=61853),
-at [ITA](http://www.ita.br). Several contributions come from the work of Marcelo S. de Sousa during [his PhD](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=64358) at ITA.
+at [ITA](http://www.ita.br), under the supervision of Prof. Pedro Paglione
+and Prof. [Roberto Gil](https://www.researchgate.net/profile/Roberto_Silva27).
+Several contributions come from the work of Marcelo S. de Sousa during [his PhD](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=64358) at ITA.
 
-This tool uses the mathematical development from the PhD theses of [Eric Brown (2003)](http://dspace.mit.edu/handle/1721.1/8001) 
-and [Christopher Shearer (2006)](http://adsabs.harvard.edu/abs/2006PhDT.......242S).
+This tool uses the mathematical development from the PhD theses of
+[Eric Brown (MIT, 2003)](http://dspace.mit.edu/handle/1721.1/8001),
+[Christopher Shearer (Harvard, 2006)](http://adsabs.harvard.edu/abs/2006PhDT.......242S)
+and [Weihua Su (University of Michigan, 2008)](http://deepblue.lib.umich.edu/handle/2027.42/61574).
 
 The structural dynamics of the airplane is modeled using a strain-based geometrically non-linear beam.
 For aerodynamic calculations, the strip theory is used including three modeling approaches:
@@ -54,3 +58,7 @@ and control of highly flexible airplanes.
 * de Sousa, M.S., [Modelagem, simulação e controle não linear de aviões muito flexíveis](http://www.bdita.bibl.ita.br/tesesdigitais/lista_resumo.php?num_tese=64358)
 
 * de Sousa, M.S., Paglione, P., Cardoso-Ribeiro, F.L., da Silva, R.G.A.,  *Use of Universal Integral Regulator to Control the Flight Dynamics of Flexible Airplanes*, COBEM 2013
+
+## License
+
+All components are licensed under the [BSD 2-Clause license](https://github.com/flavioluiz/AeroFlex/blob/master/LICENSE.TXT).

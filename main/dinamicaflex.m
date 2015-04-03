@@ -69,8 +69,8 @@ function [xp, bp, lambdap, kineticp] = dinamicaflex(t,strain, strainp, strainpp,
   
     FAERO = [];   MAERO = [];   FLAMBDA = [];
     for i = 1:ap.NUMmembers
-        if ~isempty(ap.membros{i}(1).node1.aero)
-            [FAEROm, MAEROm, FLAMBDAm] = aeroforceandmoment(ap.membros{i}(1).strainm, ap.membros{i}(1).strainpm, ap.membros{i}(1).strainppm,ap.membros{i}(1).lambdam,beta,betap,ap.membros{i},V,rho,deltaflap);
+        if ~isempty(ap.members{i}(1).node1.aero)
+            [FAEROm, MAEROm, FLAMBDAm] = aeroforceandmoment(ap.members{i}(1).strainm, ap.members{i}(1).strainpm, ap.members{i}(1).strainppm,ap.members{i}(1).lambdam,beta,betap,ap.members{i},V,rho,deltaflap);
             FAERO = [FAERO; FAEROm];
             MAERO = [MAERO; MAEROm];
             FLAMBDA = [FLAMBDA; FLAMBDAm];

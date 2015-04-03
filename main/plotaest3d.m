@@ -3,31 +3,31 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function plotest = plotaest3d(membro, translate)
+function plotest = plotaest3d(member, translate)
     if nargin < 2
         translate = [0,0,0];
     end
-    if isempty(membro(1).node3.geometry)
+    if isempty(member(1).node3.geometry)
         fprintf('\n WARNING: Can`t plot structure without geometric data \n');
     else
-        membersize = size(membro,2);
+        membersize = size(member,2);
         j = 1;
         for i=1:membersize
-            deflexao(:,j) = membro(i).node1.h; j = j+1;        
-            deflexao(:,j) = membro(i).node2.h; j = j+1;
-            deflexao(:,j) = membro(i).node3.h; j = j+1;
+            deflexao(:,j) = member(i).node1.h; j = j+1;        
+            deflexao(:,j) = member(i).node2.h; j = j+1;
+            deflexao(:,j) = member(i).node3.h; j = j+1;
         end
         for i=1:size(deflexao,2)
             switch mod(i,3)
                 case 0
-                    a = membro(floor((i-1)/3)+1).node3.geometry.a;
-                    b = membro(floor((i-1)/3)+1).node3.geometry.b;
+                    a = member(floor((i-1)/3)+1).node3.geometry.a;
+                    b = member(floor((i-1)/3)+1).node3.geometry.b;
                 case 1
-                    a = membro(floor((i-1)/3)+1).node1.geometry.a;
-                    b = membro(floor((i-1)/3)+1).node1.geometry.b;
+                    a = member(floor((i-1)/3)+1).node1.geometry.a;
+                    b = member(floor((i-1)/3)+1).node1.geometry.b;
                 case 2
-                    a = membro(floor((i-1)/3)+1).node2.geometry.a;
-                    b = membro(floor((i-1)/3)+1).node2.geometry.b;
+                    a = member(floor((i-1)/3)+1).node2.geometry.a;
+                    b = member(floor((i-1)/3)+1).node2.geometry.b;
             end
             X(i,1) = deflexao(1,i)+translate(1);% + deflexao(7,i);     
             X(i,2) = deflexao(1,i)+translate(1);

@@ -60,7 +60,7 @@ Where 'load_structure' function is the following:
 		left_wing(1).seth0([0 -.3 0 1 0 0 0 1 0 0 0 1]');
 		update(right_wing); % initialize displacements for each member node
 		update(left_wing); % initialize displacements for each member node
-		fus = rigidfus(10, [0 0 0], zeros(3,3));
+		fus = RigidFuselage(10, [0 0 0], zeros(3,3));
 		engparams.Fmax = 1; engparams.V0 = 1; engparams.rho0 = 1;
 		engparams.nv= -1; engparams.nrho = 0; engparams.alphaf = 0;
 		engparams.betaf = 0;

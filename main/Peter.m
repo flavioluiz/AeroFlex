@@ -1,4 +1,4 @@
-classdef peter
+classdef Peter
    
     properties
         n;                  % No. of degrees of freedom    [1,2,3 or 4]
@@ -50,7 +50,7 @@ classdef peter
 
     methods
        
-        function obj = peter(varargin)
+        function obj = Peter(varargin)
             
             obj.n = 2;
             obj.m = 2;

@@ -51,7 +51,7 @@ function example1
     
     %%%%%%%%%%%% MODAL ANALYSIS %%%%%%%%%%%%%%%%%%%%%%%%%%
     % find structural natural frequencies and modal shapes
-    st_modes = structural_modes(ap);
+    st_modes = StructuralModes(ap);
     numerical_freqs = st_modes.frequencies(1:6);
     exact_freqs = sort(exact(4,1,1));
     fprintf('Natural frequencies (in Hz):\n');
@@ -110,7 +110,7 @@ function example1
     tip_displacement = zeros(length(ts),1);
     for i = 1:size(ts,1)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
+        tip_displacement(i) = ap.members{1}(numele).node3.h(3);
     end
     figure('color','w','name','Wing tip displacement');
     plot(ts,tip_displacement);
@@ -132,7 +132,7 @@ function ap = load_structure(numele, damp_ratio)
     update(flexible_member); % initialize displacements for each member node
     fus = []; % no fuselage
     motor1 = []; % no engines
-    ap = airplane({flexible_member}, fus, [motor1]);
+    ap = Airplane({flexible_member}, fus, [motor1]);
 end
 
 function flexible_member = create_flexible_member(num_elements,damp_ratio)

@@ -108,7 +108,7 @@ function example5
     tip_displacement = zeros(length(ts),1);
     for i = 1:length(ts)
         update(ap,Xs(i,:),zeros(size(Xs(i,:))),zeros(size(Xs(i,:))),zeros(sum(ap.membNAEDtotal),1));
-        tip_displacement(i) = ap.membros{1}(numele).node3.h(3);
+        tip_displacement(i) = ap.members{1}(numele).node3.h(3);
     end
     figure('color','w','name','Wing tip displacement');
     plot(ts,tip_displacement);
@@ -135,13 +135,13 @@ function ap = load_structure(numele, damp_ratio)
     left_wing(1).seth0([0 -.3 0 1 0 0 0 1 0 0 0 1]');
     update(right_wing); % initialize displacements for each member node
     update(left_wing); % initialize displacements for each member node
-    fus = rigidfus(10, [0 0 0], zeros(3,3) + 0*[0.2^2*10 0 0;0 0 0; 0 0 0.2^2*10]);
+    fus = RigidFuselage(10, [0 0 0], zeros(3,3) + 0*[0.2^2*10 0 0;0 0 0; 0 0 0.2^2*10]);
     engparams.Fmax = 1; engparams.V0 = 1; engparams.rho0 = 1;
     engparams.nv= -1; engparams.nrho = 0; engparams.alphaf = 0;
     engparams.betaf = 0;
-    motor1 = engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
+    motor1 = Engine(1, [1 1 1], engparams); %numManete, posicao do motor[MEMB,ELM,ND], params
 
-    ap = airplane({right_wing, left_wing}, fus, [motor1]);
+    ap = Airplane({right_wing, left_wing}, fus, [motor1]);
 end
 
 function [right_wing, left_wing] = create_flexible_member(num_elements,damp_ratio)   
