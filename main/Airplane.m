@@ -81,11 +81,11 @@ classdef Airplane < handle
             B = [];
 
             for i = 1:ap.NUMmembers
-                Me = mdiag(Me, getmemberMe(members{i}));
-                KG = mdiag(KG, getmemberKG(members{i}));
-                CG = mdiag(CG, getmemberCG(members{i}));
+                Me = blkdiag(Me, getmemberMe(members{i}));
+                KG = blkdiag(KG, getmemberKG(members{i}));
+                CG = blkdiag(CG, getmemberCG(members{i}));
                 N = [N; getmemberN(members{i})];
-                B = mdiag(B, getB(members{i}));
+                B = blkdiag(B, getB(members{i}));
             end
 
             ap.Me = Me;
@@ -109,14 +109,14 @@ classdef Airplane < handle
             
             for i = 1:ap.NUMmembers
                 ap.members{i}(1).memberJhep = getmemberJhep(ap.members{i});
-                Jhep = mdiag(Jhep, ap.members{i}(1).memberJhep);
+                Jhep = blkdiag(Jhep, ap.members{i}(1).memberJhep);
                 
                 ap.members{i}(1).memberJpep = getJpep(ap.members{i},ap.members{i}(1).memberJhep);
-                Jpep = mdiag(Jpep,ap.members{i}(1).memberJpep);
+                Jpep = blkdiag(Jpep,ap.members{i}(1).memberJpep);
                 
                 %if isempty(ap.Jthetaep)
                     ap.members{i}(1).memberJthetaep = getJthetaep(ap.members{i},ap.members{i}(1).memberJhep);
-                    Jthetaep = mdiag(Jthetaep, ap.members{i}(1).memberJthetaep);
+                    Jthetaep = blkdiag(Jthetaep, ap.members{i}(1).memberJthetaep);
 
                     ap.members{i}(1).memberJhb = getmemberJhb(ap.members{i});
                     Jhb = [Jhb; ap.members{i}(1).memberJhb];
