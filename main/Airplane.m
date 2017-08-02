@@ -163,7 +163,6 @@ classdef Airplane < handle
             end
         end
         function airplanemovie(ap, t, strain,kinetic_RB,dt, filename, format)
-            
             if nargin < 5
                 aviobj = avifile(strcat(filename,'.avi'), 'fps', 1/dt);
                 h = figure;
@@ -187,15 +186,17 @@ classdef Airplane < handle
                 for i = 1:length(t);
                     update(ap,strain(i,:),zeros(size(strain(i,:))),zeros(size(strain(i,:))),zeros(sum(ap.membNAEDtotal),1));
                     clf(h);
-                    translate = [0,0,kinetic_RB(i,4)-kinetic_RB(1,4)];
-                    plotid = plotairplane3d(ap,translate); colormap winter;
-                    directionx = [1,0,0];
-                    directiony = [0,1,0];
                     if ~isempty(kinetic_RB)
+                        translate = [0,0,kinetic_RB(i,4)-kinetic_RB(1,4)];
+                        plotid = plotairplane3d(ap,translate); colormap winter;
+                        directionx = [1,0,0];
+                        directiony = [0,1,0];
                         for i_member = 1:ap.NUMmembers
                             rotate(plotid(i_member),directionx,kinetic_RB(i,1)*180/pi);
                             rotate(plotid(i_member),directiony,kinetic_RB(i,2)*180/pi);
                         end
+                    else
+                        plotid = plotairplane3d(ap,[0,0,0]); colormap winter;
                     end
                     view(45,45);
                     axis([-20 20 -10 10 -5 5]);
