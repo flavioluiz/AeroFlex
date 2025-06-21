@@ -66,11 +66,31 @@ addpath('./main');      % From root
 
 ## Example Types
 
+### Core Examples
 1. **Structural Dynamics** (`example1/`) - Modal analysis, equilibrium, structural simulation
 2. **Aeroelasticity** (`example2/`) - Flutter analysis, linear/nonlinear comparison
 3. **Control Reversal** (`example3/`) - Aileron reversal studies
 4. **Flight Dynamics** (`example4/`) - Full rigid-body + flexible dynamics
 5. **Stability Analysis** (`example5/`) - Work in progress
+
+### Recently Added Test Cases (for Leonardo's PhD Research)
+6. **Static AOA Analysis** (`example_static_aoa/`) - Static equilibrium analysis at specified angle of attack
+   - Finds equilibrium with aerodynamics + gravity at given AoA
+   - Extracts and plots spanwise vertical deflection and torsion
+   - Includes lift coefficient vs angle of attack data (`data_cl_alpha.mat`)
+   - Uses quasi-steady aerodynamic model with variable cl_alpha along span
+
+7. **Experimental Wing** (`experimental_wing/`) - Experimental wing configuration with tip mass
+   - Modal analysis of experimental wing structure with realistic properties
+   - Length: 0.4508m, Chord: 0.0508m, Mass: 0.2351 kg/m
+   - Tip mass: 0.0417 kg with realistic moment of inertia values
+   - Structural dynamics with tip mass effects and gravity equilibrium
+
+8. **PAZY Wing** (`pazy_wing/`) - Based on PAZY wing benchmark case
+   - High-fidelity flexible wing model for research validation
+   - Modal analysis and equilibrium computation
+   - Standard benchmark case used in aeroelastic research community
+   - Contains validation data and visualization results
 
 ## Key Analysis Capabilities
 
@@ -88,3 +108,33 @@ addpath('./main');      % From root
 - Examples include visualization (`.jpg`, `.gif` files)
 - Each example folder contains its own README with specific instructions
 - Test cases in `tests/` folder provide validation examples
+- Recently added examples include experimental data files (`.mat` format)
+- Documentation files: `AeroFlex_Program_Analysis.md`, `experimental_wing_data.md`
+
+## Recent Additions for PhD Research
+
+The following files were added to support Leonardo's PhD work:
+
+### New Examples
+- `examples/example_static_aoa/` - Static angle of attack analysis with aerodynamic data
+  - `example_static_aoa_sim.m` - Main simulation script with variable AoA capability
+  - `data_cl_alpha.mat` - Spanwise lift coefficient data for realistic aerodynamic modeling
+- `examples/experimental_wing/` - Experimental wing with tip mass modeling
+  - `experimental_wing_sim.m` - Complete structural analysis with realistic wing properties
+  - Includes modal analysis, equilibrium computation, and time-domain simulation
+- `examples/pazy_wing/` - PAZY wing benchmark implementation
+  - Standard research benchmark for aeroelastic validation
+  - Contains modal analysis and structural dynamics examples
+
+### Documentation
+- `AeroFlex_Program_Analysis.md` - Comprehensive program analysis documentation
+- `experimental_wing_data.md` - Experimental wing data and configuration details
+
+### Key Features of New Examples
+- **Realistic Material Properties**: Based on experimental data and literature values
+- **Advanced Aerodynamic Modeling**: Variable lift coefficient distribution along span
+- **Tip Mass Effects**: Proper modeling of concentrated masses at wing tips
+- **Validation Cases**: Standard benchmarks for research verification
+- **Enhanced Visualization**: Improved plotting of deflections, torsion, and modal shapes
+
+These additions focus on advanced aeroelastic analysis, experimental validation, and benchmark test cases commonly used in flexible aircraft research.
